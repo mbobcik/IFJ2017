@@ -8,24 +8,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-typedef struct token{
-    int token;
-    char * data;
-}token;
-
 typedef struct buffer{
     int alocatedSize;
     int actualSize;
     char * data;
 }buffer;
 
-token * getToken();
-buffer * bInit(int size);
-void bAdd(char c, buffer * buffer);
-void bDispose(buffer * buffer);
-void printBuffer(buffer * buffer);
 
-enum tokenTypes {
+typedef enum tokenTypes {
     IDENTIFICATOR,
     INTEGER,
     DOUBLE,
@@ -53,21 +43,22 @@ enum tokenTypes {
     KEY_THEN,
     KEY_WHILE,
     // LITERAL, ??
-    END_OF_FILE,
-    PLUS,
-    MINUS,
-    MULTIPLY,
-    DIVIDE,
-    GREATER,
-    GREATER_EQUAL,
-    LESSER,
-    LESSER_EQUAL,
-    EQUAL,
-    NOT_EQUAL,
+            END_OF_FILE,
+    OPERATOR_PLUS,
+    OPERATOR_MINUS,
+    OPERATOR_MULTIPLY,
+    OPERATOR_DIVIDE,
+    OPERATOR_GREATER,
+    OPERATOR_GREATER_EQUAL,
+    OPERATOR_LESSER,
+    OPERATOR_LESSER_EQUAL,
+    OPERATOR_EQUAL,
+    OPERATOR_NOT_EQUAL,
+    OPERATOR_ASSIGN,
 
 
     /////////Reserved keywords
-    KEY_AND = 1001,
+            KEY_AND = 1001,
     KEY_BOOLEAN = 1002,
     KEY_CONTINUE = 1003,
     KEY_ELSEIF = 1004,
@@ -80,5 +71,22 @@ enum tokenTypes {
     KEY_SHARED = 1011,
     KEY_STATIC = 1012,
     KEY_TRUE = 1013
-};
+} tokenTypes;
+
+typedef struct token{
+    tokenTypes tokenType;
+    char * data;
+}token;
+
+#define TOKEN_DATA_SIZE 32
+#define APOSTROPHE_ASCII_VALUE 39
+
+token * getToken();
+buffer * bInit(int size);
+void bAdd(char c, buffer * buffer);
+void bDispose(buffer * buffer);
+void printBuffer(buffer * buffer);
+
+
+
 #endif //SRC_SCANNER_H
