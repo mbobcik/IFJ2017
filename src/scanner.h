@@ -5,13 +5,16 @@
 #ifndef SRC_SCANNER_H
 #define SRC_SCANNER_H
 
+#include <stdio.h>
+#include <stdlib.h>
+
 typedef struct token{
     int token;
     char * data;
 }token;
 
 typedef struct buffer{
-    int bSize;
+    int alocatedSize;
     int actualSize;
     char * data;
 }buffer;
@@ -20,11 +23,13 @@ token * getToken();
 buffer * bInit(int size);
 void bAdd(char c, buffer * buffer);
 void bDispose(buffer * buffer);
+void printBuffer(buffer * buffer);
 
 enum tokenTypes {
     IDENTIFICATOR,
     INTEGER,
     DOUBLE,
+    STRING,
     KEY_AS,
     KEY_ASC,
     KEY_DECLARE,
@@ -47,14 +52,16 @@ enum tokenTypes {
     KEY_SUBSTR,
     KEY_THEN,
     KEY_WHILE,
-    LITERAL,
-    EOF,
+    // LITERAL, ??
+    END_OF_FILE,
     PLUS,
     MINUS,
     MULTIPLY,
     DIVIDE,
     GREATER,
+    GREATER_EQUAL,
     LESSER,
+    LESSER_EQUAL,
     EQUAL,
     NOT_EQUAL,
 
