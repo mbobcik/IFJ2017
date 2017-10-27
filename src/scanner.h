@@ -43,7 +43,7 @@ typedef enum tokenTypes {
     KEY_THEN,
     KEY_WHILE,
     // LITERAL, ??
-            END_OF_FILE,
+    END_OF_FILE,
     OPERATOR_PLUS,
     OPERATOR_MINUS,
     OPERATOR_MULTIPLY,
@@ -86,7 +86,7 @@ buffer * bInit(int size);
 void bAdd(char c, buffer * buffer);
 void bDispose(buffer * buffer);
 void printBuffer(buffer * buffer);
-
+int isalphaMy(char c);
 
 
 #endif //SRC_SCANNER_H

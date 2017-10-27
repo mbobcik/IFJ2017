@@ -10,7 +10,7 @@
 
 token * getToken(){
     token * newToken;
-    if((newToken = (token *)malloc(sizeof(token))) == NULL){
+    if(!(newToken = (token *)malloc(sizeof(token)))){
         throwError(INTERNAL_ERROR,__LINE__);
     }
     if((newToken->data = malloc(sizeof(char) * TOKEN_DATA_SIZE))){
@@ -32,7 +32,8 @@ token * getToken(){
 
     buffer* buffer = bInit(2);
     char c;
-    while (c = getchar()) {
+
+    while ((c = getchar())) {
         if (c == EOF) {
             newToken->tokenType = END_OF_FILE;
             newToken->data = "EOF";
@@ -40,7 +41,7 @@ token * getToken(){
             return newToken;
         } else if (identificatorFlag == 1) {              // Identificator
 
-            if (isalpha(c) || isdigit(c) || c == '_') {   // alnum_ >> identificator
+            if (isalphaMy(c) || isdigit(c) || c == '_') {   // alnum_ >> identificator
                 bAdd(c, buffer);
 
             }
@@ -56,7 +57,7 @@ token * getToken(){
                 EFlag = 1;
                 bAdd(c,buffer);
             }
-        } else if (isaplpha(c) ||
+        } else if (isalphaMy(c) ||
                    c == '_'){       // start a-zA-Z> Identificator
             identificatorFlag = 1;
             bAdd(c,buffer);
@@ -84,22 +85,31 @@ token * getToken(){
 
 }
 
+int isalphaMy (char c){
+    if ( c >='a' && c <= 'z')
+        return 1;
+    if (c >= 'A' && c <= 'Z')
+        return 1;
+    return 0;
+}
+
+
 buffer * bInit(int size){
     buffer * newBuffer;
-    if((newBuffer = (buffer *)malloc(sizeof(buffer))) == NULL) {
+    if(!(newBuffer = (buffer *)malloc(sizeof(buffer)))) {
         throwError(INTERNAL_ERROR, __LINE__);
     }
     newBuffer->actualSize = 0;
     newBuffer->alocatedSize = size;
-    if((newBuffer->data = malloc(size * sizeof(char))) == NULL){
+    if(!(newBuffer->data = malloc(size * sizeof(char)))){
         throwError(INTERNAL_ERROR,__LINE__);
     }
-    newBuffer->data[0]="\0";
+    newBuffer->data[0]='\0';
     return newBuffer;
 }
 
 void bAdd(char c, buffer * buffer){
-    if(buffer == NULL){
+    if(!buffer){
         throwError(INTERNAL_ERROR,__LINE__);
     }
 
@@ -110,23 +120,25 @@ void bAdd(char c, buffer * buffer){
 
         buffer->data = realloc(buffer->data, buffer->alocatedSize * sizeof(char));
 
-        if(buffer->data == NULL){
+        if(!buffer->data){
             throwError(INTERNAL_ERROR,__LINE__);
         }
     }
 
 
     buffer->data[buffer->actualSize++] = c;
-    buffer->data[buffer->actualSize] == "\0";
+    buffer->data[buffer->actualSize] = '\0';
 }
 
 void bDispose(buffer * buffer){
-    if(buffer == NULL){
+    if(!buffer){
         throwError(INTERNAL_ERROR,__LINE__);
     }
     free(buffer->data);
     free(buffer);
 }
 void printBuffer(buffer * buffer){
-    printf("Buffer->allocatedSize: %d\nBuffer->actualSize: %d\nBuffer->data: %s\n",buffer->alocatedSize,buffer->actualSize,buffer->data);
+    if(buffer){
+        printf("Buffer->allocatedSize: %d\nBuffer->actualSize: %d\nBuffer->data: %s\n",buffer->alocatedSize,buffer->actualSize,buffer->data);
+    }
 }
