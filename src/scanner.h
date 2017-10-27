@@ -16,7 +16,7 @@ typedef struct buffer{
 
 
 typedef enum tokenTypes {
-    IDENTIFICATOR,
+    IDENTIFIER,
     INTEGER,
     DOUBLE,
     STRING,
@@ -58,7 +58,7 @@ typedef enum tokenTypes {
 
 
     /////////Reserved keywords
-            KEY_AND = 1001,
+    KEY_AND = 1001,
     KEY_BOOLEAN = 1002,
     KEY_CONTINUE = 1003,
     KEY_ELSEIF = 1004,
@@ -78,7 +78,7 @@ typedef struct token{
     char * data;
 }token;
 
-#define TOKEN_DATA_SIZE 32
+#define TOKEN_DATA_SIZE 128
 #define APOSTROPHE_ASCII_VALUE 39
 
 token * getToken();
@@ -86,7 +86,7 @@ buffer * bInit(int size);
 void bAdd(char c, buffer * buffer);
 void bDispose(buffer * buffer);
 void printBuffer(buffer * buffer);
-int isalphaMy(char c);
-
+//int isalphaMy(char c);
+tokenTypes idOrKey(char * data);
 
 #endif //SRC_SCANNER_H
