@@ -14,7 +14,7 @@ token * getToken(){
     if(!(newToken = (token *)malloc(sizeof(token)))){
         throwError(INTERNAL_ERROR,__LINE__);
     }
-    if((newToken->data = malloc(sizeof(char) * TOKEN_DATA_SIZE))){
+    if(!(newToken->data = malloc(sizeof(char) * TOKEN_DATA_SIZE))){
         throwError(INTERNAL_ERROR,__LINE__);
     }
 
@@ -63,7 +63,6 @@ token * getToken(){
                     throwError(LEXICAL_ERROR, __LINE__);
 
                 return newToken;
-
             }
         } else if (state == lineCommentFlag ) {              // line comment
             if (c == '\n') {                                // '\n' >> start
@@ -152,7 +151,6 @@ token * getToken(){
             return newToken;
         }
     }
-
 }
 
 /*
@@ -166,75 +164,75 @@ int isalphaMy (char c){
 */
 
 tokenTypes idOrKey(char * data) {
-    if (strcmp(data, "as")) {
+    if (strcmp(data, "as") == 0) {
         return KEY_AS;
-    } else if (strcmp(data, "asc")) {
+    } else if (strcmp(data, "asc")== 0) {
         return KEY_ASC;
-    } else if (strcmp(data, "declare")) {
+    } else if (strcmp(data, "declare")== 0) {
         return KEY_DECLARE;
-    } else if (strcmp(data, "dim")) {
+    } else if (strcmp(data, "dim")== 0) {
         return KEY_DIM;
-    } else if (strcmp(data, "do")) {
+    } else if (strcmp(data, "do")== 0) {
         return KEY_DO;
-    } else if (strcmp(data, "double")) {
+    } else if (strcmp(data, "double")== 0) {
         return KEY_DOUBLE;
-    } else if (strcmp(data, "else")) {
+    } else if (strcmp(data, "else")== 0) {
         return KEY_ELSE;
-    } else if (strcmp(data, "end")) {
+    } else if (strcmp(data, "end")== 0) {
         return KEY_END;
-    } else if (strcmp(data, "chr")) {
+    } else if (strcmp(data, "chr")== 0) {
         return KEY_CHR;
-    } else if (strcmp(data, "function")) {
+    } else if (strcmp(data, "function")== 0) {
         return KEY_FUNCTION;
-    } else if (strcmp(data, "if")) {
+    } else if (strcmp(data, "if")== 0) {
         return KEY_IF;
-    } else if (strcmp(data, "input")) {
+    } else if (strcmp(data, "input")== 0) {
         return KEY_INPUT;
-    } else if (strcmp(data, "integer")) {
+    } else if (strcmp(data, "integer")== 0) {
         return KEY_INTEGER;
-    } else if (strcmp(data, "length")) {
+    } else if (strcmp(data, "length")== 0) {
         return KEY_LENGTH;
-    } else if (strcmp(data, "loop")) {
+    } else if (strcmp(data, "loop")== 0) {
         return KEY_LOOP;
-    } else if (strcmp(data, "print")) {
+    } else if (strcmp(data, "print")== 0) {
         return KEY_PRINT;
-    } else if (strcmp(data, "return")) {
+    } else if (strcmp(data, "return")== 0) {
         return KEY_RETURN;
-    } else if (strcmp(data, "scope")) {
+    } else if (strcmp(data, "scope")== 0) {
         return KEY_SCOPE;
-    } else if (strcmp(data, "string")) {
+    } else if (strcmp(data, "string")== 0) {
         return KEY_STRING;
-    } else if (strcmp(data, "substr")) {
+    } else if (strcmp(data, "substr")== 0) {
         return KEY_SUBSTR;
-    } else if (strcmp(data, "then")) {
+    } else if (strcmp(data, "then")== 0) {
         return KEY_THEN;
-    } else if (strcmp(data, "while")) {
+    } else if (strcmp(data, "while")== 0) {
         return KEY_WHILE;
-    } else if (strcmp(data, "and")) {
+    } else if (strcmp(data, "and")== 0) {
         return KEY_AND;
-    } else if (strcmp(data, "boolean")) {
+    } else if (strcmp(data, "boolean")== 0) {
         return KEY_BOOLEAN;
-    } else if (strcmp(data, "continue")) {
+    } else if (strcmp(data, "continue")== 0) {
         return KEY_CONTINUE;
-    } else if (strcmp(data, "elseif")) {
+    } else if (strcmp(data, "elseif")== 0) {
         return KEY_ELSEIF;
-    } else if (strcmp(data, "exit")) {
+    } else if (strcmp(data, "exit")== 0) {
         return KEY_EXIT;
-    } else if (strcmp(data, "false")) {
+    } else if (strcmp(data, "false")== 0) {
         return KEY_FALSE;
-    } else if (strcmp(data, "for")) {
+    } else if (strcmp(data, "for")== 0) {
         return KEY_FOR;
-    } else if (strcmp(data, "next")) {
+    } else if (strcmp(data, "next")== 0) {
         return KEY_NEXT;
-    } else if (strcmp(data, "not")) {
+    } else if (strcmp(data, "not")== 0) {
         return KEY_NOT;
-    } else if (strcmp(data, "or")) {
+    } else if (strcmp(data, "or")== 0) {
         return KEY_OR;
-    } else if (strcmp(data, "shared")) {
+    } else if (strcmp(data, "shared")== 0) {
         return KEY_SHARED;
-    } else if (strcmp(data, "static")) {
+    } else if (strcmp(data, "static")== 0) {
         return KEY_STATIC;
-    } else if (strcmp(data, "true")) {
+    } else if (strcmp(data, "true")== 0) {
         return KEY_TRUE;
     } else{
         return IDENTIFIER;
