@@ -29,6 +29,7 @@ typedef enum FAStates {
     lesserFlag,
     toBeStringFlag,
     stringFlag,
+    doubleFlag,
 } FAStates;
 
 typedef enum tokenTypes {

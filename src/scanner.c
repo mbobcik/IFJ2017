@@ -33,7 +33,6 @@ token * getToken(){
         } else if (state == identifierFlag) {              // identifier
             if (isalpha(c) || isdigit(c) || c == '_') {   //            alnum_ >> identifier
                 bAdd(tolower(c), buffer);
-
             }else{
                                         // is Keyword?
                 newToken->tokenType = idOrKey(buffer->data);
@@ -61,6 +60,33 @@ token * getToken(){
 
                 if (INT_MAX == ((int) strtol(newToken->data, (char **) NULL, 10)))
                     throwError(LEXICAL_ERROR, __LINE__);
+
+                return newToken;
+            }
+        } else if (state == dotFlag) {
+            if (isdigit(c)) {           // dotFlag 0-9 >> double
+                bAdd(c, buffer);
+                state = doubleFlag;
+            } else {
+                throwError(LEXICAL_ERROR, __LINE__);
+            }
+        } else if (state == doubleFlag){
+            if(isdigit(c)){                 // double 0-9 >> double
+                bAdd(c,buffer);
+            } else if (c == 'e' ||
+                       c == 'E'){
+                state = EFlag;
+                bAdd(c,buffer);
+            } else if (isalpha(c) || c == '_' || c == '$') {            // todo comment da code
+                throwError(LEXICAL_ERROR, __LINE__);
+            } else {
+                newToken->tokenType = DOUBLE;
+                strcpy(newToken->data, buffer->data);
+                ungetc(c, stdin);
+
+                if (FLT_MAX == ((double) strtod(actualToken->data,NULL))) {
+                    throwException(LEXICAL_ERROR, __LINE__);
+                }
 
                 return newToken;
             }
