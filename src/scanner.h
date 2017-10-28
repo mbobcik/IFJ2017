@@ -32,17 +32,17 @@ typedef enum FAStates {
 } FAStates;
 
 typedef enum tokenTypes {
-    IDENTIFIER,
+    IDENTIFIER, // 0
     INTEGER,
-    DOUBLE,
-    STRING,
+    DOUBLE,     // todo
+    STRING,     // todo
     KEY_AS,
     KEY_ASC,
     KEY_DECLARE,
     KEY_DIM,
     KEY_DO,
     KEY_DOUBLE,
-    KEY_ELSE,
+    KEY_ELSE, // 10
     KEY_END,
     KEY_CHR,
     KEY_FUNCTION,
@@ -52,18 +52,18 @@ typedef enum tokenTypes {
     KEY_LENGTH,
     KEY_LOOP,
     KEY_PRINT,
-    KEY_RETURN,
+    KEY_RETURN, // 20
     KEY_SCOPE,
     KEY_STRING,
     KEY_SUBSTR,
     KEY_THEN,
     KEY_WHILE,
     // LITERAL, ??
-    END_OF_FILE,
+    END_OF_FILE,            // fixme
     OPERATOR_PLUS,
     OPERATOR_MINUS,
     OPERATOR_MULTIPLY,
-    OPERATOR_DIVIDE,
+    OPERATOR_DIVIDE, // 30
     OPERATOR_GREATER,
     OPERATOR_GREATER_EQUAL,
     OPERATOR_LESSER,
@@ -71,10 +71,10 @@ typedef enum tokenTypes {
     OPERATOR_EQUAL,
     OPERATOR_NOT_EQUAL,
     OPERATOR_ASSIGN,
-    COMMA,
+    COMMA,                  // todo start
     OPENING_BRACKET,
-    CLOSING_BRACKET,
-    SEMICOLON,
+    CLOSING_BRACKET, // 40
+    SEMICOLON,              // todo end
 
     /////////Reserved keywords
     KEY_AND = 1001,
@@ -107,5 +107,6 @@ void bDispose(buffer * buffer);
 void printBuffer(buffer * buffer);
 //int isalphaMy(char c);
 tokenTypes idOrKey(char * data);
+void printToken(token * token);
 
 #endif //SRC_SCANNER_H

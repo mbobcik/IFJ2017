@@ -1,0 +1,18 @@
+Scope
+	Dim _a As Integer
+	_a5hoj
+	DIM vysl AS INTEGER
+	'ahoj svete
+	/'ahoj svete
+	jak se mas'/
+	5+5
+	a=8 * 5
+	a<>b
+	>=
+	<=
+	>
+	<
+	==
+End Scope
+++/'dg'htf'/
+5a5

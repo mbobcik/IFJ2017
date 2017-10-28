@@ -101,6 +101,7 @@ token * getToken(){
                 return newToken;
             } else if( c == '>'){
                 newToken->tokenType = OPERATOR_NOT_EQUAL;// '>' >> not equal  (<>)
+                return newToken;
             } else{                                     // else >> lesser
                 newToken->tokenType = OPERATOR_LESSER;
                 ungetc(c,stdin);
@@ -152,16 +153,6 @@ token * getToken(){
         }
     }
 }
-
-/*
-int isalphaMy (char c){
-    if ( c >='a' && c <= 'z')
-        return 1;
-    if (c >= 'A' && c <= 'Z')
-        return 1;
-    return 0;
-}
-*/
 
 tokenTypes idOrKey(char * data) {
     if (strcmp(data, "as") == 0) {
@@ -284,4 +275,8 @@ void printBuffer(buffer * buffer){
     if(buffer){
         printf("Buffer->allocatedSize: %d\nBuffer->actualSize: %d\nBuffer->data: %s\n",buffer->alocatedSize,buffer->actualSize,buffer->data);
     }
+}
+
+void printToken(token * token){
+    printf("token->tokenType: %2d; token->data: %s\n",token->tokenType,token->data);
 }
