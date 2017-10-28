@@ -14,6 +14,22 @@ typedef struct buffer{
     char * data;
 }buffer;
 
+typedef enum FAStates {
+    startFlag,
+    identifierFlag,
+    integerFlag,
+    dotFlag,
+    EFlag,
+    lineCommentFlag,
+    possibleBlockCommentFlag,
+    blockCommentFlag,
+    possibleBlockUncommentFlag,
+    assignFlag,
+    greaterFlag,
+    lesserFlag,
+    toBeStringFlag,
+    stringFlag,
+} FAStates;
 
 typedef enum tokenTypes {
     IDENTIFIER,
@@ -55,7 +71,10 @@ typedef enum tokenTypes {
     OPERATOR_EQUAL,
     OPERATOR_NOT_EQUAL,
     OPERATOR_ASSIGN,
-
+    COMMA,
+    OPENING_BRACKET,
+    CLOSING_BRACKET,
+    SEMICOLON,
 
     /////////Reserved keywords
     KEY_AND = 1001,

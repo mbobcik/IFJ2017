@@ -18,18 +18,7 @@ token * getToken(){
         throwError(INTERNAL_ERROR,__LINE__);
     }
 
-    int identificatorFlag = 0;
-    int integerFlag = 0;
-    int dotFlag = 0;
-    int EFlag = 0;
-    int lineCommentFlag = 0;
-    int possibleBlockCommentFlag = 0;
-    int blockCommentFlag = 0;
-    int possibleBlockUncommentFlag = 0;
-    int assignFlag = 0;
-    int greaterFlag = 0;
-    int lesserFlag = 0;
-    int toBeStringFlag = 0;
+    FAStates state = startFlag;
 
     buffer* buffer = bInit(2);
     char c;
@@ -41,63 +30,126 @@ token * getToken(){
             newToken->data = "EOF";
             bDispose(buffer);
             return newToken;
-        } else if (identificatorFlag == 1) {              // Identificator
-            if (isalpha(c) || isdigit(c) || c == '_') {   // alnum_ >> identificator
+        } else if (state == identifierFlag) {              // identifier
+            if (isalpha(c) || isdigit(c) || c == '_') {   //            alnum_ >> identifier
                 bAdd(tolower(c), buffer);
 
-            } else if (isspace(c)){
+            }else{
+                                        // is Keyword?
                 newToken->tokenType = idOrKey(buffer->data);
                 strcpy(newToken->data,buffer->data);
                 ungetc(c,stdin);
                 return newToken;
-            }else{
-                throwError(LEXICAL_ERROR,__LINE__);
             }
-        } else if(integerFlag == 1){
-            if (isdigit(c)){        // integer number >> integer
-                bAdd(c,buffer);
-            } else if (c == '.'){   // integer '.' >> dotFlag
-                dotFlag = 1;
-                integerFlag = 0;
-                bAdd(c,buffer);
-            } else if (c =='e' ||
-                       c == 'E'){       // integer e/E >> EFlag
-                EFlag = 1;
-                integerFlag = 0;
-                bAdd(tolower(c),buffer);
-            } else if(isspace(c)){ // ending in integer state
+        } else if(state == integerFlag ) {
+            if (isdigit(c)) {        // integer 0-9 >> integer
+                bAdd(c, buffer);
+            } else if (c == '.') {   // integer '.' >> dotFlag
+                state = dotFlag;
+                bAdd(c, buffer);
+            } else if (c == 'e' ||
+                       c == 'E') {       // integer eE >> EFlag
+                state = EFlag;
+                bAdd(tolower(c), buffer);
+
+            } else if (isalpha(c) || c == '_' || c == '$') {
+                throwError(LEXICAL_ERROR, __LINE__);
+            } else {
                 newToken->tokenType = INTEGER;
                 strcpy(newToken->data, buffer->data);
                 ungetc(c, stdin);
 
-                if( INT_MAX == ((int) strtol(newToken->data, (char **)NULL, 10)))
-                    throwError(LEXICAL_ERROR,__LINE__);
+                if (INT_MAX == ((int) strtol(newToken->data, (char **) NULL, 10)))
+                    throwError(LEXICAL_ERROR, __LINE__);
 
                 return newToken;
+
+            }
+        } else if (state == lineCommentFlag ) {              // line comment
+            if (c == '\n') {                                // '\n' >> start
+                state = startFlag;
+            }                                               // else >> line comment
+        }else if ( state == possibleBlockCommentFlag ) {      // possible block comment
+            if (c == APOSTROPHE_ASCII_VALUE) {              // apostrophe >> block comment
+                state = blockCommentFlag;
+            } else {                                       // else >> divide operator
+                newToken->tokenType = OPERATOR_DIVIDE;
+                ungetc(c, stdin);
+                return newToken;
+            }
+        } else if (state == blockCommentFlag) {
+            if (c == APOSTROPHE_ASCII_VALUE) {              // block comment apostrophe >> possible block uncomment
+                state = possibleBlockUncommentFlag;
+            }                                               //               else >> block comment
+        } else if (state == possibleBlockUncommentFlag ){
+            if (c == '/'){                                  // possible block uncomment '/' >> start
+                state = startFlag;
+            } else{                                         //                          else >> block comment
+                state = blockCommentFlag;
+            }
+        } else if(state == assignFlag ) {                // assign
+            if (c == '=') {
+                newToken->tokenType = OPERATOR_EQUAL;   // '=' >> Equal operator
+                return newToken;
             } else {
-                throwError(LEXICAL_ERROR,__LINE__); //<<<<<<<<< is this Right?
+                newToken->tokenType = OPERATOR_ASSIGN;  // else >> assign operator
+                ungetc(c, stdin);
+                return newToken;
+            }
+        } else if (state == lesserFlag ){                // lesser
+            if (c == '=') {                              // '=' >> lesser or equal
+                newToken->tokenType = OPERATOR_LESSER_EQUAL;
+                return newToken;
+            } else if( c == '>'){
+                newToken->tokenType = OPERATOR_NOT_EQUAL;// '>' >> not equal  (<>)
+            } else{                                     // else >> lesser
+                newToken->tokenType = OPERATOR_LESSER;
+                ungetc(c,stdin);
+                return newToken;
+            }
+        } else if (state == greaterFlag ) {               // greater
+            if (c == '=') {                              // '=' >> greater or equal
+                newToken->tokenType = OPERATOR_GREATER_EQUAL;
+                return newToken;
+            } else {                                     // else >> greater
+                newToken->tokenType = OPERATOR_GREATER;
+                ungetc(c, stdin);
+                return newToken;
+            }
+        } else if (state == toBeStringFlag ){
+            if(c == '"'){               // toBeString '"' >> string
+                state = stringFlag;
             }
         } else if (isalpha(c) ||
-                   c == '_'){       // start a-zA-Z> Identificator
-            identificatorFlag = 1;
+                   c == '_'){       // start _a-zA-Z >> identifier
+            state = identifierFlag;
             bAdd(tolower(c),buffer);
         } else if (isdigit(c)){     // start number >> int
-            integerFlag = 1;
+            state = integerFlag;
             bAdd(c,buffer);
         } else if (c == APOSTROPHE_ASCII_VALUE){ // start '\39' >> line_comment
-            lineCommentFlag = 1;
+            state = lineCommentFlag ;
         } else if (c == '/') {      // start '/'>> possible_block_comment
-            possibleBlockCommentFlag = 1;
+            state = possibleBlockCommentFlag;
         } else if (isspace(c)){     //start whiteSpace >> start
-
+            state = startFlag;
         } else if (c == '='){       // start '=' >> Assign
-            assignFlag = 1;
+            state = assignFlag;
         } else if (c == '<'){       // start '<' >> Lesser
-            lesserFlag = 1;
+            state = lesserFlag;
         } else if (c == '>'){       // start '>' >> Greater
-            greaterFlag = 1;
+            state = greaterFlag;
         } else if (c == '!'){       // start '!' >> toBeString
-            toBeStringFlag = 1;
+            state = toBeStringFlag;
+        } else if (c == '+'){       // start '+' >> plus operator
+            newToken->tokenType = OPERATOR_PLUS;
+            return newToken;
+        } else if (c == '-'){       // start '-' >> minus operator
+            newToken->tokenType = OPERATOR_MINUS;
+            return newToken;
+        } else if (c == '*'){       // start '*' >> multiply operator
+            newToken->tokenType = OPERATOR_MULTIPLY;
+            return newToken;
         }
     }
 
@@ -187,7 +239,6 @@ tokenTypes idOrKey(char * data) {
     } else{
         return IDENTIFIER;
     }
-
 }
 
 buffer * bInit(int size){
@@ -209,7 +260,6 @@ void bAdd(char c, buffer * buffer){
         throwError(INTERNAL_ERROR,__LINE__);
     }
 
-
     if(buffer->actualSize + 1 > buffer->alocatedSize){
 
         buffer->alocatedSize = 2 * buffer->alocatedSize;
@@ -220,7 +270,6 @@ void bAdd(char c, buffer * buffer){
             throwError(INTERNAL_ERROR,__LINE__);
         }
     }
-
 
     buffer->data[buffer->actualSize++] = c;
     buffer->data[buffer->actualSize] = '\0';
