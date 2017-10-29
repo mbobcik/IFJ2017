@@ -5,22 +5,23 @@
 #include <string.h>
 #include <ctype.h>
 #include <limits.h>
+#include <float.h>
 #include "scanner.h"
 #include "error.h"
 
 
-token * getToken(){
-    token * newToken;
-    if(!(newToken = (token *)malloc(sizeof(token)))){
-        throwError(INTERNAL_ERROR,__LINE__);
+token * getToken() {
+    token *newToken;
+    if (!(newToken = (token *) malloc(sizeof(token)))) {
+        throwError(INTERNAL_ERROR, __LINE__);
     }
-    if(!(newToken->data = malloc(sizeof(char) * TOKEN_DATA_SIZE))){
-        throwError(INTERNAL_ERROR,__LINE__);
+    if (!(newToken->data = malloc(sizeof(char) * TOKEN_DATA_SIZE))) {
+        throwError(INTERNAL_ERROR, __LINE__);
     }
 
     FAStates state = startFlag;
 
-    buffer* buffer = bInit(2);
+    buffer *buffer = bInit(2);
     char c;
 
     while ((c = getchar())) {
@@ -30,24 +31,24 @@ token * getToken(){
             newToken->data = "EOF";
             bDispose(buffer);
             return newToken;
-        } else if (state == identifierFlag) {              // identifier
-            if (isalpha(c) || isdigit(c) || c == '_') {   //            alnum_ >> identifier
+        } else if (state == identifierFlag) {
+            if (isalpha(c) || isdigit(c) || c == '_') {   // identifier alnum_ >> identifier
                 bAdd(tolower(c), buffer);
-            }else{
-                                        // is Keyword?
+            } else {
+                // is Keyword?
                 newToken->tokenType = idOrKey(buffer->data);
-                strcpy(newToken->data,buffer->data);
-                ungetc(c,stdin);
+                strcpy(newToken->data, buffer->data);
+                ungetc(c, stdin);
                 return newToken;
             }
-        } else if(state == integerFlag ) {
-            if (isdigit(c)) {        // integer 0-9 >> integer
+        } else if (state == integerFlag) {
+            if (isdigit(c)) {                       // integer 0-9 >> integer
                 bAdd(c, buffer);
-            } else if (c == '.') {   // integer '.' >> dotFlag
+            } else if (c == '.') {                  // integer '.' >> dotFlag
                 state = dotFlag;
                 bAdd(c, buffer);
             } else if (c == 'e' ||
-                       c == 'E') {       // integer eE >> EFlag
+                   c == 'E') {                      // integer eE >> EFlag
                 state = EFlag;
                 bAdd(tolower(c), buffer);
 
@@ -64,40 +65,74 @@ token * getToken(){
                 return newToken;
             }
         } else if (state == dotFlag) {
-            if (isdigit(c)) {           // dotFlag 0-9 >> double
+            if (isdigit(c)) {                       // dotFlag 0-9 >> double
                 bAdd(c, buffer);
                 state = doubleFlag;
             } else {
                 throwError(LEXICAL_ERROR, __LINE__);
             }
-        } else if (state == doubleFlag){
-            if(isdigit(c)){                 // double 0-9 >> double
-                bAdd(c,buffer);
-            } else if (c == 'e' ||
-                       c == 'E'){
+        } else if (state == doubleFlag) {
+            if (isdigit(c)) {                       // double 0-9 >> double
+                bAdd(c, buffer);
+            } else if (c == 'e' ||                  // double eE  >> EFlag
+                       c == 'E') {
                 state = EFlag;
-                bAdd(c,buffer);
-            } else if (isalpha(c) || c == '_' || c == '$') {            // todo comment da code
+                bAdd(tolower(c), buffer);
+            } else if (isalpha(c) || c == '_' || c == '$') {
                 throwError(LEXICAL_ERROR, __LINE__);
             } else {
                 newToken->tokenType = DOUBLE;
                 strcpy(newToken->data, buffer->data);
                 ungetc(c, stdin);
 
-                if (FLT_MAX == ((double) strtod(actualToken->data,NULL))) {
-                    throwException(LEXICAL_ERROR, __LINE__);
+                if (FLT_MAX == ((double) strtod(newToken->data, NULL))) {
+                    throwError(LEXICAL_ERROR, __LINE__);
                 }
 
                 return newToken;
             }
-        } else if (state == lineCommentFlag ) {              // line comment
-            if (c == '\n') {                                // '\n' >> start
+        } else if (state == EFlag) {
+            if (isdigit(c)) {                   // EFlag 0-9 >> doubleE
+                bAdd(c, buffer);
+                state = doubleEFlag;
+            } else if (c == '+' ||
+                       c == '-') {              //EFlag +- >> ESign
+                bAdd(c, buffer);
+                state = ESignFlag;
+            } else {
+                throwError(LEXICAL_ERROR, __LINE__);
+            }
+        } else if (state == ESignFlag) {         // ESign 0-9 >> doubleE
+            if (isdigit(c)) {
+                bAdd(c, buffer);
+                state = doubleEFlag;
+            } else {
+                throwError(LEXICAL_ERROR, __LINE__);
+            }
+        } else if (state == doubleEFlag) {
+            if (isdigit(c)) {                     // doubleE 0-9 >> doubleE
+                bAdd(c, buffer);
+            } else if (isalpha(c) || c == '_' || c == '$') {
+                throwError(LEXICAL_ERROR, __LINE__);
+            } else {
+                newToken->tokenType = DOUBLE;
+                strcpy(newToken->data, buffer->data);
+                ungetc(c, stdin);
+
+                if (FLT_MAX == ((double) strtod(newToken->data, NULL))) {
+                    throwError(LEXICAL_ERROR, __LINE__);
+                }
+
+                return newToken;
+            }
+        } else if (state == lineCommentFlag) {              // line comment '\n' >> start
+            if (c == '\n') {
                 state = startFlag;
-            }                                               // else >> line comment
-        }else if ( state == possibleBlockCommentFlag ) {      // possible block comment
-            if (c == APOSTROPHE_ASCII_VALUE) {              // apostrophe >> block comment
+            }                                               // line comment else >> line comment
+        } else if (state == possibleBlockCommentFlag) {
+            if (c == APOSTROPHE_ASCII_VALUE) {              // possible block comment apostrophe >> block comment
                 state = blockCommentFlag;
-            } else {                                       // else >> divide operator
+            } else {                                       // possible block comment else >> divide operator
                 newToken->tokenType = OPERATOR_DIVIDE;
                 ungetc(c, stdin);
                 return newToken;
@@ -105,77 +140,93 @@ token * getToken(){
         } else if (state == blockCommentFlag) {
             if (c == APOSTROPHE_ASCII_VALUE) {              // block comment apostrophe >> possible block uncomment
                 state = possibleBlockUncommentFlag;
-            }                                               //               else >> block comment
-        } else if (state == possibleBlockUncommentFlag ){
-            if (c == '/'){                                  // possible block uncomment '/' >> start
+            }                                               // block comment else >> block comment
+        } else if (state == possibleBlockUncommentFlag) {
+            if (c == '/') {                                  // possible block uncomment '/' >> start
                 state = startFlag;
-            } else{                                         //                          else >> block comment
+            } else {                                         // possible block uncomment else >> block comment
                 state = blockCommentFlag;
             }
-        } else if(state == assignFlag ) {                // assign
-            if (c == '=') {
-                newToken->tokenType = OPERATOR_EQUAL;   // '=' >> Equal operator
+        } else if (state == assignFlag) {
+            if (c == '=') {                                 // assign '=' >> Equal operator
+                newToken->tokenType = OPERATOR_EQUAL;
                 return newToken;
             } else {
-                newToken->tokenType = OPERATOR_ASSIGN;  // else >> assign operator
+                newToken->tokenType = OPERATOR_ASSIGN;      // assign else >> assign operator
                 ungetc(c, stdin);
                 return newToken;
             }
-        } else if (state == lesserFlag ){                // lesser
-            if (c == '=') {                              // '=' >> lesser or equal
+        } else if (state == lesserFlag) {
+            if (c == '=') {                                 // lesser '=' >> lesser or equal
                 newToken->tokenType = OPERATOR_LESSER_EQUAL;
                 return newToken;
-            } else if( c == '>'){
-                newToken->tokenType = OPERATOR_NOT_EQUAL;// '>' >> not equal  (<>)
+            } else if (c == '>') {
+                newToken->tokenType = OPERATOR_NOT_EQUAL;   // lesser '>' >> not equal  (<>)
                 return newToken;
-            } else{                                     // else >> lesser
+            } else {                                         // lesser else >> lesser
                 newToken->tokenType = OPERATOR_LESSER;
-                ungetc(c,stdin);
+                ungetc(c, stdin);
                 return newToken;
             }
-        } else if (state == greaterFlag ) {               // greater
-            if (c == '=') {                              // '=' >> greater or equal
+        } else if (state == greaterFlag) {
+            if (c == '=') {                                 // greater '=' >> greater or equal
                 newToken->tokenType = OPERATOR_GREATER_EQUAL;
                 return newToken;
-            } else {                                     // else >> greater
+            } else {                                        // greater else >> greater
                 newToken->tokenType = OPERATOR_GREATER;
                 ungetc(c, stdin);
                 return newToken;
             }
-        } else if (state == toBeStringFlag ){
-            if(c == '"'){               // toBeString '"' >> string
+        } else if (state == toBeStringFlag) {
+            if (c == '"') {                                   // toBeString '"' >> string
                 state = stringFlag;
             }
-        } else if (isalpha(c) ||
-                   c == '_'){       // start _a-zA-Z >> identifier
-            state = identifierFlag;
-            bAdd(tolower(c),buffer);
-        } else if (isdigit(c)){     // start number >> int
-            state = integerFlag;
-            bAdd(c,buffer);
-        } else if (c == APOSTROPHE_ASCII_VALUE){ // start '\39' >> line_comment
-            state = lineCommentFlag ;
-        } else if (c == '/') {      // start '/'>> possible_block_comment
-            state = possibleBlockCommentFlag;
-        } else if (isspace(c)){     //start whiteSpace >> start
-            state = startFlag;
-        } else if (c == '='){       // start '=' >> Assign
-            state = assignFlag;
-        } else if (c == '<'){       // start '<' >> Lesser
-            state = lesserFlag;
-        } else if (c == '>'){       // start '>' >> Greater
-            state = greaterFlag;
-        } else if (c == '!'){       // start '!' >> toBeString
-            state = toBeStringFlag;
-        } else if (c == '+'){       // start '+' >> plus operator
-            newToken->tokenType = OPERATOR_PLUS;
-            return newToken;
-        } else if (c == '-'){       // start '-' >> minus operator
-            newToken->tokenType = OPERATOR_MINUS;
-            return newToken;
-        } else if (c == '*'){       // start '*' >> multiply operator
-            newToken->tokenType = OPERATOR_MULTIPLY;
-            return newToken;
+        } else if (state == startFlag) {
+            if (isalpha(c) ||
+                c == '_') {       // start _a-zA-Z >> identifier
+                state = identifierFlag;
+                bAdd(tolower(c), buffer);
+            } else if (isdigit(c)) {     // start number >> int
+                state = integerFlag;
+                bAdd(c, buffer);
+            } else if (c == APOSTROPHE_ASCII_VALUE) { // start '\39' >> line_comment
+                state = lineCommentFlag;
+            } else if (c == '/') {      // start '/'>> possible_block_comment
+                state = possibleBlockCommentFlag;
+            } else if (isspace(c)) {     //start whiteSpace >> start
+                state = startFlag;
+            } else if (c == '=') {       // start '=' >> Assign
+                state = assignFlag;
+            } else if (c == '<') {       // start '<' >> Lesser
+                state = lesserFlag;
+            } else if (c == '>') {       // start '>' >> Greater
+                state = greaterFlag;
+            } else if (c == '!') {       // start '!' >> toBeString
+                state = toBeStringFlag;
+            } else if (c == '+') {       // start '+' >> plus operator
+                newToken->tokenType = OPERATOR_PLUS;
+                return newToken;
+            } else if (c == '-') {       // start '-' >> minus operator
+                newToken->tokenType = OPERATOR_MINUS;
+                return newToken;
+            } else if (c == '*') {       // start '*' >> multiply operator
+                newToken->tokenType = OPERATOR_MULTIPLY;
+                return newToken;
+            } else if (c == ','){        // start ',' >> comma
+                newToken->tokenType = COMMA;
+                return newToken;
+            } else if (c == '('){       // start '(' >> opening bracket
+                newToken->tokenType = OPENING_BRACKET;
+                return newToken;
+            } else if (c == ')'){        //start ')' >> closing bracket
+                newToken->tokenType = CLOSING_BRACKET;
+                return newToken;
+            } else if ( c == ';'){      // start ';' >> semicolon
+                newToken->tokenType = SEMICOLON;
+                return newToken;
+            } else {
+                throwError(LEXICAL_ERROR,__LINE__);
+            }
         }
     }
 }

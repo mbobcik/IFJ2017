@@ -5,7 +5,12 @@ Scope
 	'ahoj svete
 	/'ahoj svete
 	jak se mas'/
+	(;,)
 	5+5
+	5.5
+	5e+5
+	5.4e5
+	5.01e-548
 	a=8 * 5
 	a<>b
 	>=
@@ -15,4 +20,4 @@ Scope
 	==
 End Scope
 ++/'dg'htf'/
-5a5
+

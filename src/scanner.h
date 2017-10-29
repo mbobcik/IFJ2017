@@ -30,12 +30,14 @@ typedef enum FAStates {
     toBeStringFlag,
     stringFlag,
     doubleFlag,
+    doubleEFlag,
+    ESignFlag
 } FAStates;
 
 typedef enum tokenTypes {
     IDENTIFIER, // 0
     INTEGER,
-    DOUBLE,     // todo
+    DOUBLE,
     STRING,     // todo
     KEY_AS,
     KEY_ASC,
@@ -72,10 +74,10 @@ typedef enum tokenTypes {
     OPERATOR_EQUAL,
     OPERATOR_NOT_EQUAL,
     OPERATOR_ASSIGN,
-    COMMA,                  // todo start
+    COMMA,
     OPENING_BRACKET,
     CLOSING_BRACKET, // 40
-    SEMICOLON,              // todo end
+    SEMICOLON,
 
     /////////Reserved keywords
     KEY_AND = 1001,
