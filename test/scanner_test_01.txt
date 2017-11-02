@@ -14,10 +14,11 @@ Scope
 	a=8 * 5
 	a<>b
 	>=
+	!"ahoj"
+	!"Ahoj\nSve'te\\\034"
 	<=
 	>
 	<
 	==
 End Scope
-++/'dg'htf'/
 

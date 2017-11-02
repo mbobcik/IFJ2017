@@ -29,6 +29,9 @@ typedef enum FAStates {
     lesserFlag,
     toBeStringFlag,
     stringFlag,
+    escapeFlag,
+    escape1stNumFlag,
+    escape2ndNumFlag,
     doubleFlag,
     doubleEFlag,
     ESignFlag
@@ -38,7 +41,7 @@ typedef enum tokenTypes {
     IDENTIFIER, // 0
     INTEGER,
     DOUBLE,
-    STRING,     // todo
+    STRING,
     KEY_AS,
     KEY_ASC,
     KEY_DECLARE,
@@ -61,8 +64,7 @@ typedef enum tokenTypes {
     KEY_SUBSTR,
     KEY_THEN,
     KEY_WHILE,
-    // LITERAL, ??
-    END_OF_FILE,            // fixme
+    END_OF_FILE,
     OPERATOR_PLUS,
     OPERATOR_MINUS,
     OPERATOR_MULTIPLY,
@@ -100,6 +102,7 @@ typedef struct token{
     char * data;
 }token;
 
+#define CHARNUMBER_TO_INT(c) (c - 48)
 #define TOKEN_DATA_SIZE 128
 #define APOSTROPHE_ASCII_VALUE 39
 
