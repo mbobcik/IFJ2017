@@ -80,6 +80,7 @@ typedef enum tokenTypes {
     OPENING_BRACKET,
     CLOSING_BRACKET, // 40
     SEMICOLON,
+    END_OF_LINE,
 
     /////////Reserved keywords
     KEY_AND = 1001,

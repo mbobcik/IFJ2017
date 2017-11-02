@@ -245,6 +245,11 @@ token * getToken() {
                 state = possibleBlockCommentFlag;
             } else if (isspace(c)) {     //start whiteSpace >> start
                 state = startFlag;
+
+                 if(c == '\n'){         // start '\n' >> EOL end
+                     newToken->tokenType = END_OF_LINE;
+                     return newToken;
+                 }
             } else if (c == '=') {       // start '=' >> Assign
                 state = assignFlag;
             } else if (c == '<') {       // start '<' >> Lesser

@@ -15,7 +15,7 @@ Scope
 	a<>b
 	>=
 	!"ahoj"
-	!"Ahoj\nSve'te\\\034"
+	!"Ahoj\nSve'te\\\034"!""
 	<=
 	>
 	<
