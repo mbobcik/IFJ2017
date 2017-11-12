@@ -1,0 +1,24 @@
+<prog>
+KEY_SCOPE END_OF_LINE <st-list> KEY_END KEY_SCOPE <end-prog>
+KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE
+KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE
+KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <st-list> KEY_END KEY_FUNCTION END_OF_LINE
+END_OF_LINE
+
+<end-prog>
+END_OF_LINE <end-prog>
+END_OF_FILE
+
+<param-list>
+<param> COMMA <param-list>
+<param>
+
+<param>
+IDENTIFIER KEY_AS <data-type>
+
+<st-list>
+<stat> END_OF_LINE <st-list>
+
+<stat>
+
+<data-type>
