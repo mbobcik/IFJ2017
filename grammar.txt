@@ -1,67 +1,68 @@
 <prog>
-KEY_SCOPE END_OF_LINE <scope-st-list> KEY_END KEY_SCOPE <end-prog>
-KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <prog>
-KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <prog>
-KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <fun-st-list> KEY_END KEY_FUNCTION END_OF_LINE <prog>
-END_OF_LINE <prog>
-<end-prog>
+1.  <prog> -> KEY_SCOPE END_OF_LINE <scope-st-list> KEY_END KEY_SCOPE <end-prog>
+2.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <prog>
+3.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <prog>                 // kolize
+4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <fun-st-list> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+5.  <prog> -> END_OF_LINE <prog>
+6.  <prog> -> <end-prog>
 
 <end-prog>
-END_OF_LINE <end-prog>
-END_OF_FILE
+7.  <end-prog> -> END_OF_LINE <end-prog>
+8.  <end-prog> -> END_OF_FILE
 
 <param-list>
-<param> COMMA <param-list>
-<param>
+9.  <param-list> -> <param> COMMA <param-list>   
+10. <param-list> -> <param>
 
 <param>
-IDENTIFIER KEY_AS <data-type>
+11. <param> -> IDENTIFIER KEY_AS <data-type>
 
 <fun-st-list>
-<fun-stat> END_OF_LINE <fun-st-list>
-<fun-stat> END_OF_LINE
-END_OF_LINE
+12. <fun-st-list> -> <fun-stat> END_OF_LINE <fun-st-list>
+13. <fun-st-list> -> <fun-stat> END_OF_LINE
+14. <fun-st-list> -> END_OF_LINE
 
 <fun-stat>
-KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>
-KEY_DIM IDENTIFIER KEY_AS <data-type>
-IDENTIFIER OPERATOR_ASSIGN <expression>
-KEY_INPUT IDENTIFIER
-KEY_PRINT <print-list>
-KEY_IF <expression> KEY_THEN END_OF_LINE <fun-st-list> KEY_ELSE END_OF_LINE <fun-st-list> KEY_END KEY_IF
-KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-st-list> KEY_LOOP
-IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET CLOSING_BRACKET
-IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> CLOSING_BRACKET
-KEY_RETURN <expression>
+15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>                /taky kolize
+16. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type>
+17. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression>
+18. <fun-stat> -> KEY_INPUT IDENTIFIER
+19. <fun-stat> -> KEY_PRINT <print-list>
+20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-st-list> KEY_ELSE END_OF_LINE <fun-st-list> KEY_END KEY_IF
+21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-st-list> KEY_LOOP
+22. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET CLOSING_BRACKET
+23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> CLOSING_BRACKET   // zmenit, kolize 
+24. <fun-stat> -> KEY_RETURN <expression>
 
 <scope-st-list>
-<scope-stat> END_OF_LINE <scope-st-list>
-<scope-stat> END_OF_LINE
-END_OF_LINE
+25. <scope-st-list> -> <scope-stat> END_OF_LINE <scope-st-list>
+26. <scope-st-list> -> <scope-stat> END_OF_LINE
+27. <scope-st-list> -> END_OF_LINE
 
 <scope-stat>
-KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>
-KEY_DIM IDENTIFIER KEY_AS <data-type>
-IDENTIFIER OPERATOR_ASSIGN <expression>
-KEY_INPUT IDENTIFIER
-KEY_PRINT <print-list>
-KEY_IF <expression> KEY_THEN END_OF_LINE <scope-st-list> KEY_ELSE END_OF_LINE <scope-st-list> KEY_END KEY_IF
-KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-st-list> KEY_LOOP
-IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET CLOSING_BRACKET
-IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> CLOSING_BRACKET
-
+29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>   /// asi kolize
+30. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type>
+31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression>
+32. <scope-stat> -> KEY_INPUT IDENTIFIER
+33. <scope-stat> -> KEY_PRINT <print-list>
+34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-st-list> KEY_ELSE END_OF_LINE <scope-st-list> KEY_END KEY_IF
+35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-st-list> KEY_LOOP
+36. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET CLOSING_BRACKET
+37. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> CLOSING_BRACKET   // kolize
 
 <param-id-list>
-IDENTIFIER COMMA <param-id-list>
-IDENTIFIER
+38. <param-id-list> -> IDENTIFIER COMMA <param-id-list>         // kolize
+39. <param-id-list> -> IDENTIFIER
 
 <print-list>
-<expression> SEMICOLON <print-list>
-<expression> SEMICOLON
+40. <print-list> -> <expression> SEMICOLON <print-list>
+41. <print-list> -> <expression> SEMICOLON
 
-<expression>
 
 <data-type>
-KEY_STRING
-KEY_DOUBLE
-KEY_INTEGER
+42. <data-type> -> KEY_STRING
+43. <data-type> -> KEY_DOUBLE
+44. <data-type> -> KEY_INTEGER
+ 
+<expression>      /// vz5e3it expressions
+
