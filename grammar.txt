@@ -18,6 +18,7 @@
 
 <fun-st-list>
 12. <fun-st-list> -> <fun-stat> END_OF_LINE <fun-st-list>
+    <fun-st-list> -> KEY_RETURN <expression> END_OF_LINE <fun-st-list>
 13. <fun-st-list> -> END_OF_LINE <fun-st-list>
 14. <fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
 
@@ -30,7 +31,7 @@
 20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-st-list> KEY_ELSE END_OF_LINE <fun-st-list> KEY_END KEY_IF
 21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-st-list> KEY_LOOP
 23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list>  
-24. <fun-stat> -> KEY_RETURN <expression>
+//24. <fun-stat> -> KEY_RETURN <expression>
 
 <scope-st-list>
 25. <scope-st-list> -> <scope-stat> END_OF_LINE <scope-st-list>
