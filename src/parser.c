@@ -155,7 +155,7 @@ int prog(){
 }
 
 int fun_st_list(){
-
+    return 0;
 }
 
 /*
@@ -182,7 +182,7 @@ int end_prog(){
  */
 int scope_st_list(){
    nextToken= getToken();
-    if(nextToken->tokenType == KEY_END){
+    if(nextToken->tokenType == KEY_END){    //28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
         nextToken=getToken();
         if(nextToken->tokenType != KEY_SCOPE){
             throwError(SYNTAX_ERROR,__LINE__);
@@ -191,7 +191,7 @@ int scope_st_list(){
         return end_prog();
     }
 
-    int err = scope_stat();
+    int err = scope_stat();             // 25. <scope-st-list> -> <scope-stat> <scope-st-list>
     if(err != 0){
         throwError(err,__LINE__);
         return err;
@@ -363,7 +363,15 @@ int scope_stat(){
     return SYNTAX_ERROR;
 }
 
+int fun_stat(){
+    return 0;
+}
+
 int scope_while_stat_list(){
+    return 0;
+}
+
+int fun_while_stat_list(){
     return 0;
 }
 
@@ -371,14 +379,80 @@ int scope_else_stat_list(){
     return 0;
 }
 
+/*
+ * <fun-else-stat-list>
+ *  <fun-if-stat-list> -> <fun-stat> <fun-else-stat-list>
+ *  <fun-if-stat-list> -> KEY_END KEY_IF
+ */
+int fun_else_stat_list(){
+    nextToken=getToken();
+    if(nextToken->tokenType == KEY_END){
+        nextToken=getToken();
+        if (nextToken->tokenType != KEY_IF){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+    }
+    int err = fun_stat();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+
+    err = fun_else_stat_list();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+    return 0;
+}
+
 int scope_if_stat_list(){
     return 0;
 }
 
-int assign(){
+/*
+ * <fun-if-stat-list>
+ *  <fun-if-stat-list> -> <fun-stat> <fun-if-stat-list>
+ *  <fun-if-stat-list> -> KEY_ELSE END_OF_LINE
+ */
+int fun_if_stat_list(){
     return 0;
 }
 
+/*
+ * <assign>
+ *  <assign> -> OPERATOR_ASSIGN <expression> END_OF_LINE
+ *  <assign> -> END_OF_LINE
+ */
+int assign(){
+    nextToken=getToken();
+    if(nextToken->tokenType == END_OF_LINE){ // <assign> -> END_OF_LINE
+        return 0;
+    }
+    if(nextToken->tokenType != OPERATOR_ASSIGN){    //<assign> -> OPERATOR_ASSIGN <expression> END_OF_LINE
+        throwError(SYNTAX_ERROR,__LINE__);
+        return SYNTAX_ERROR;
+    }
+    int err =0;
+    err = expression();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+    nextToken = getToken();
+    if(nextToken->tokenType!= END_OF_LINE){
+        throwError(SYNTAX_ERROR,__LINE__);
+        return SYNTAX_ERROR;
+    }
+    return 0;
+}
+
+/*
+ * <print-list>
+ *  40. <print-list> -> <expression> SEMICOLON <print-list>
+ *  41. <print-list> -> <expression> SEMICOLON
+ */
 int print_list(){
     return 0;
 }
@@ -423,6 +497,10 @@ int param_list(){
     return err;
 }
 
+int param_id_list(){
+    return 0;
+}
+
 /*
  * <param>
  * 11. <param> -> CLOSING_BRACKET
@@ -430,10 +508,10 @@ int param_list(){
  */
 int param(){
     nextToken = getToken();
-    if(nextToken->tokenType == CLOSING_BRACKET){
+    if(nextToken->tokenType == CLOSING_BRACKET){    //11. <param> -> CLOSING_BRACKET
         return 0;
     }
-    if(nextToken->tokenType != COMMA){
+    if(nextToken->tokenType != COMMA){               //11. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
        throwError(SYNTAX_ERROR,__LINE__);
          return SYNTAX_ERROR;
     }
@@ -461,6 +539,10 @@ int param(){
     //paramStack.Push(param);
 
     return param();
+}
+
+int param_id(){
+    return 0;
 }
 
 /**

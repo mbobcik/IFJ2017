@@ -34,13 +34,13 @@
 
 <fun-stat>
 15. <fun-stat> -> END_OF_LINE
-15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>
+15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>            // fix me
 17. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
 18. <fun-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
 19. <fun-stat> -> KEY_PRINT <print-list> END_OF_LINE
 20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list> END_OF_LINE
 21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list> END_OF_LINE
-23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE
+23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE //mee too
 24. <fun-stat> -> KEY_RETURN <expression> END_OF_LINE
 
 <scope-st-list>
@@ -65,22 +65,25 @@
 
 <scope-stat>
 29. <scope-stat> -> END_OF_LINE
-29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>
+29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>          //fixme
 31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
 32. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
 33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
 34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE 
 35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
-37. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE
+37. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE       // and me 
 
 <param-id-list>
-38. <param-id-list> -> COMMA IDENTIFIER <param-id-list>         
-39. <param-id-list> -> IDENTIFIER <param-id-list> 
 39. <param-id-list> -> CLOSING_BRACKET
+39. <param-id-list> -> IDENTIFIER <param-id>               
+
+<param-id>
+11. <param> -> CLOSING_BRACKET
+11. <param> -> COMMA IDENTIFIER <param-id>
 
 <print-list>
 40. <print-list> -> <expression> SEMICOLON <print-list>
-41. <print-list> -> <expression> SEMICOLON
+41. <print-list> -> <expression> SEMICOLON                  /// need rework
 
 <data-type>
 42. <data-type> -> KEY_STRING
@@ -88,3 +91,38 @@
 44. <data-type> -> KEY_INTEGER
  
 <expression>      /// vyresit expressions
+
+<<<<<<<<  nonterminals:  >>>>>>>>>>
+    <assign>
+    <data-type>
+    <end-prog>
+
+<expression> 
+
+    <fun-else-stat-list>
+<fun-if-stat-list>
+<fun-st-list>
+<fun-stat>
+<fun-while-stat-list>
+<param-id-list>
+<param-id>
+    <param-list>
+    <param>
+<print-list>
+    <prog>
+<scope-else-stat-list>
+<scope-if-stat-list>
+    <scope-st-list>
+    <scope-stat>
+<scope-while-stat-list>
+
+
+
+
+
+
+
+
+
+
+
