@@ -1,7 +1,7 @@
 <prog>
 1.  <prog> -> KEY_SCOPE END_OF_LINE <scope-st-list> 
 2.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
-4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <fun-st-list> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <fun-st-list> 
 5.  <prog> -> END_OF_LINE <prog>
 ////6.  <prog> -> <end-prog>
 
@@ -19,8 +19,9 @@
 
 <fun-st-list>
 12. <fun-st-list> -> <fun-stat> END_OF_LINE <fun-st-list>
-13. <fun-st-list> -> <fun-stat> END_OF_LINE
-14. <fun-st-list> -> END_OF_LINE
+13. <fun-st-list> -> END_OF_LINE <fun-st-list>
+14. <fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+//14. <fun-st-list> -> END_OF_LINE
 
 <fun-stat>
 15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>                /taky kolize

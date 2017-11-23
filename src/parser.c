@@ -30,9 +30,8 @@ int parse(){
  /*
   * 1.  <prog> -> KEY_SCOPE END_OF_LINE <scope-st-list>
   * 2.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
-  * 4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> CLOSING_BRACKET KEY_AS <data-type> END_OF_LINE <fun-st-list> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+  * 4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <fun-st-list>
   * 5.  <prog> -> END_OF_LINE <prog>
-  * 6.  <prog> -> <end-prog>
   */
 int prog(){
      int err;
@@ -59,6 +58,7 @@ int prog(){
          if (nextToken->tokenType != IDENTIFIER){
              return SYNTAX_ERROR;
          }
+         // check redeclaration
          // symtable->functionName = nextToken->data
 
          nextToken = getToken();
@@ -91,10 +91,46 @@ int prog(){
 
          err = prog();
          return err;
-     } else if (nextToken->tokenType == KEY_FUNCTION){
+     } else if (nextToken->tokenType == KEY_FUNCTION){ // 4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list>  KEY_AS <data-type> END_OF_LINE <fun-st-list>
+
+         nextToken = getToken();
+         if(nextToken->tokenType != IDENTIFIER){
+             return LEXICAL_ERROR;
+         }
+
+         //maybe chech if declared
+
+         //check redefinition
+
+         //symtable->funcionName = nextToken->data;
+
+         nextToken=getToken();
+         if(nextToken->tokenType != OPENING_BRACKET){
+             return SYNTAX_ERROR;
+         }
+
+         err = param_list();
+         if(err != 0){
+             return err;
+         }
+         //stuff params to symtable
+
+         nextToken = getToken();
+         if(nextToken->tokenType != KEY_AS){
+             return SYNTAX_ERROR;
+         }
+
+         int actualDataType=0;
+         err = data_type(&actualDataType);
+         //symtable->functionType = actualDataType ,,,, or check Datatype
+
+         nextToken = getToken();
+         if (nextToken->tokenType != END_OF_LINE){
+             return SYNTAX_ERROR;
+         }
 
      } else if (nextToken->tokenType == END_OF_LINE){
-
+        prog();
      } else{
          return SYNTAX_ERROR;
      }
@@ -114,6 +150,11 @@ int param_list(){
     return 0;
 }
 
+/**
+ * Use as int a; data_type(&a);
+ * @param pointer to int, will contain data type
+ * @return return 0 if correct, SYNTAX_ERROR if not
+ */
 int data_type(int* type){
     nextToken = getToken();
     if(nextToken->tokenType == KEY_STRING){

@@ -1,2 +1,6 @@
 declare function ahoj( as integer
 scope
+
+function ahoj ( as string
+
+
