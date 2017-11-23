@@ -21,14 +21,29 @@
 13. <fun-st-list> -> END_OF_LINE <fun-st-list>
 14. <fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
 
+<fun-if-stat-list>
+    <fun-if-stat-list> -> <fun-stat> END_OF_LINE <fun-if-stat-list>
+    <fun-if-stat-list> -> END_OF_LINE <fun-if-stat-list>
+    <fun-if-stat-list> -> KEY_ELSE END_OF_LINE
+
+<fun-else-stat-list>
+    <fun-if-stat-list> -> <fun-stat> END_OF_LINE <fun-else-stat-list>
+    <fun-if-stat-list> -> END_OF_LINE <fun-else-stat-list>
+    <fun-if-stat-list> -> KEY_END KEY_IF
+
+<fun-while-stat-list>
+    <fun-while-stat-list> -> <fun-stat> END_OF_LINE <fun-while-stat-list>
+    <fun-while-stat-list> -> END_OF_LINE <fun-while-stat-list>
+    <fun-while-stat-list> -> KEY_LOOP
+
 <fun-stat>
-15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>                /taky kolize
+15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>                //taky kolize
 16. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type>
 17. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression>
 18. <fun-stat> -> KEY_INPUT IDENTIFIER
 19. <fun-stat> -> KEY_PRINT <print-list>
-20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-st-list> KEY_ELSE END_OF_LINE <fun-st-list> KEY_END KEY_IF
-21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-st-list> KEY_LOOP
+20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list>
+21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list>
 23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list>  
 24. <fun-stat> -> KEY_RETURN <expression>
 
@@ -37,14 +52,29 @@
 28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
 26. <scope-st-list> -> END_OF_LINE <scope-st-list> 
 
+<scope-if-stat-list>
+    <scope-if-stat-list> -> <scope-stat> END_OF_LINE <scope-if-stat-list>
+    <scope-if-stat-list> -> END_OF_LINE <scope-if-stat-list>
+    <scope-if-stat-list> -> KEY_ELSE END_OF_LINE
+
+<scope-else-stat-list>
+    <scope-if-stat-list> -> <scope-stat> END_OF_LINE <scope-else-stat-list>
+    <scope-if-stat-list> -> END_OF_LINE <scope-else-stat-list>
+    <scope-if-stat-list> -> KEY_END KEY_IF
+
+<scope-while-stat-list>
+    <scope-while-stat-list> -> <scope-stat> END_OF_LINE <scope-while-stat-list>
+    <scope-while-stat-list> -> END_OF_LINE <scope-while-stat-list>
+    <scope-while-stat-list> -> KEY_LOOP
+
 <scope-stat>
 29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>   /// asi kolize
 30. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type>
 31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression>
 32. <scope-stat> -> KEY_INPUT IDENTIFIER
 33. <scope-stat> -> KEY_PRINT <print-list>
-34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-st-list> KEY_ELSE END_OF_LINE <scope-st-list> KEY_END KEY_IF
-35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-st-list> KEY_LOOP
+34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list>
+35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list>
 37. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list>    
 
 <param-id-list>
@@ -56,11 +86,9 @@
 40. <print-list> -> <expression> SEMICOLON <print-list>
 41. <print-list> -> <expression> SEMICOLON
 
-
 <data-type>
 42. <data-type> -> KEY_STRING
 43. <data-type> -> KEY_DOUBLE
 44. <data-type> -> KEY_INTEGER
  
 <expression>      /// vyresit expressions
-
