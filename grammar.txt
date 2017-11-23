@@ -3,25 +3,23 @@
 2.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
 4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <fun-st-list> 
 5.  <prog> -> END_OF_LINE <prog>
-////6.  <prog> -> <end-prog>
 
 <end-prog>
 7.  <end-prog> -> END_OF_LINE <end-prog>
 8.  <end-prog> -> END_OF_FILE
 
 <param-list>
-9.  <param-list> -> COMMA <param> <param-list>   
-10. <param-list> -> <param> <param-list> 
-10. <param-list> -> CLOSING_BRACKET
+9.  <param-list> -> CLOSING_BRACKET
+10. <param-list> -> IDENTIFIER KEY_AS <data-type> <param>   
 
 <param>
-11. <param> -> IDENTIFIER KEY_AS <data-type>
+11. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
+11. <param> -> CLOSING_BRACKET
 
 <fun-st-list>
 12. <fun-st-list> -> <fun-stat> END_OF_LINE <fun-st-list>
 13. <fun-st-list> -> END_OF_LINE <fun-st-list>
 14. <fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
-//14. <fun-st-list> -> END_OF_LINE
 
 <fun-stat>
 15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>                /taky kolize
@@ -38,7 +36,6 @@
 25. <scope-st-list> -> <scope-stat> END_OF_LINE <scope-st-list>
 28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
 26. <scope-st-list> -> END_OF_LINE <scope-st-list> 
-///27. <scope-st-list> -> END_OF_LINE
 
 <scope-stat>
 29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> OPERATOR_ASSIGN <expression>   /// asi kolize
