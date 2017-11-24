@@ -65,13 +65,8 @@ void show_ht_item(tItem *item, bool addPadding) {
 
                     //parametry
                     tFunctionData * fData = (tFunctionData *) tmp->data;
-                    tFunctionParams *param1 =fData->params;
-                    while (param1 != NULL) {
-                        show_ht_item(param1->item, addPadding);
-                        param1 = param1->nextParam;
-                    }
+                    show_st_list(fData->params);
 
-                    if (addPadding) printf("\t\t");
                     printf(")");
 
                     // definovana?
@@ -87,8 +82,12 @@ void show_ht_item(tItem *item, bool addPadding) {
                 else {
                     // variable
                     if (addPadding) printf("\t\t");
-                    printf("|\t\t%s %s = ", getDataTypeName(tmp->dataType), tmp->name);
-
+                    if (tmp->dataType == INTEGER) {
+                        printf("|\t%s\t\t%s = ", getDataTypeName(tmp->dataType), tmp->name);
+                    }
+                    else {
+                        printf("|\t%s\t%s = ", getDataTypeName(tmp->dataType), tmp->name);
+                    }
                     // hodnota
                     tVariableData * data = tmp->data;
                     if (data != NULL) {
@@ -107,7 +106,7 @@ void show_ht_item(tItem *item, bool addPadding) {
                                     break;
                                 case STRING:
                                     valS = (char *) data->data;
-                                    printf("%s", valS);
+                                    printf("\"%s\"", valS);
                                     break;
                                 default:
                                     printf(" ||UNSPEC|| ");
@@ -137,11 +136,7 @@ void show_ht_item(tItem *item, bool addPadding) {
 
                 //parametry
                 tFunctionData * fData = (tFunctionData *) item->data;
-                tFunctionParams *param1 =fData->params;
-                while (param1 != NULL) {
-                    show_ht_item(param1->item, addPadding);
-                    param1 = param1->nextParam;
-                }
+                show_st_list(fData->params);
 
                 printf(")");
                 if (fData->defined) {
@@ -156,7 +151,12 @@ void show_ht_item(tItem *item, bool addPadding) {
             else if (item->type == variable){
                 // variable
                 if (addPadding) printf("\t\t");
-                printf("|\t%s %s = ", getDataTypeName(item->dataType), item->name);
+                if (item->dataType == INTEGER) {
+                    printf("|\t%s\t\t%s = ", getDataTypeName(item->dataType), item->name);
+                }
+                else {
+                    printf("|\t%s\t%s = ", getDataTypeName(item->dataType), item->name);
+                }
 
                 // hodnota
                 tVariableData * data = item->data;
@@ -176,7 +176,7 @@ void show_ht_item(tItem *item, bool addPadding) {
                                 break;
                             case STRING:
                                 valS = (char *) data->data;
-                                printf("%s", valS);
+                                printf("\"%s\"", valS);
                                 break;
                             default:
                                 printf(" ||UNSPEC|| ");
@@ -250,5 +250,8 @@ void show_st_list(tFunctionParams *list) {
         }
 
         tmp = tmp->nextParam;
+        if (tmp != NULL) {
+            printf(", ");
+        }
     }
 }
