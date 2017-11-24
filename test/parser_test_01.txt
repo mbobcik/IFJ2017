@@ -1,22 +1,56 @@
 
+declare function a (a as integer, b as double) as integer
+
+function a (a as double) as double
+input a
+print ;
+
+if then
+    if then
+        print ;      
+    else
+        input a
+        print ;
+        do while 
+            print ;
+        loop
+
+    end if
+else
+end if
+print ;
+
+
+do while 
+ print ;
+loop
+
+end function
 
 scope
 
 
-dim a as integer 
-'print ;
-input a ;
+dim a as integer =
+
+input a
+
+
 if then
-'
+
     if then
+    print ;  
     else
+    input b
+    print ;
     end if
-'
+
 else
 print ;
 end if
 
-do while  print ;
+print ;
+do while 
+ print ;
 loop
 
 

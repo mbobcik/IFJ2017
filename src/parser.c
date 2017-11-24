@@ -31,6 +31,7 @@ int parse(){
  /*
   * 1.  <prog> -> KEY_SCOPE END_OF_LINE <scope-st-list>
   * 2.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
+  * 2.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
   * 4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <fun-st-list>
   * 5.  <prog> -> END_OF_LINE <prog>
   */
@@ -135,6 +136,10 @@ int prog(){
 
          int actualDataType=0;
          err = data_type(&actualDataType);
+         if(err != 0){
+             throwError(err,__LINE__);
+             return err;
+         }
          //symtable->functionType = actualDataType ,,,, or check Datatype
 
          nextToken = getToken();
@@ -144,8 +149,8 @@ int prog(){
          }
 
          return fun_st_list();
-     } else if (nextToken->tokenType == END_OF_LINE){
-        prog();
+     } else if (nextToken->tokenType == END_OF_LINE) {
+         prog();
      } else{
         throwError(SYNTAX_ERROR,__LINE__);
         return SYNTAX_ERROR;
@@ -154,8 +159,64 @@ int prog(){
      return 0;
 }
 
+/*
+ * <fun-st-list>
+ *  12. <fun-st-list> -> <fun-stat> <fun-st-list>
+ *  14. <fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+ *      <fun-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <fun-st-list>
+ */
 int fun_st_list(){
-    return 0;
+
+    nextToken= getToken();
+    if(nextToken->tokenType == KEY_END) {    //<fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+        nextToken = getToken();
+        if (nextToken->tokenType != KEY_FUNCTION) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        nextToken=getToken();
+        if (nextToken->tokenType != END_OF_LINE){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+        return prog();
+    } else if (nextToken->tokenType == KEY_DIM){    // <fun-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <fun-st-list>
+        nextToken=getToken();
+        if (nextToken->tokenType != IDENTIFIER){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+        //symtable.newVar.name = nextToken->data;
+        nextToken=getToken();
+        if (nextToken->tokenType != KEY_AS){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        int variableDataType = 0;
+        int err = data_type(&variableDataType);
+        if(err != 0){
+            throwError(err,__LINE__);
+            return err;
+        }
+        // newVariable.VarType = variableDataType
+
+        err = assign();
+        if(err != 0){
+            throwError(err,__LINE__);
+            return err;
+        }
+
+        return fun_st_list();
+    }
+
+    int err = fun_stat();           //12. <fun-st-list> -> <fun-stat> <fun-st-list>
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+    return fun_st_list();
 }
 
 /*
@@ -214,8 +275,13 @@ int scope_st_list(){
         // newVariable.VarType = variableDataType
         // maybe VarType = nextToken->tokenType could be easier dum**ss
 
-        return assign();
+        err = assign();
+        if(err != 0){
+            throwError(err,__LINE__);
+            return err;
+        }
 
+        return scope_st_list();
     }
 
     int err = scope_stat();             // 25. <scope-st-list> -> <scope-stat> <scope-st-list>
@@ -236,127 +302,272 @@ int scope_st_list(){
  *  34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
  *  35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
 */
-int scope_stat(){
+int scope_stat() {
 
-    if(nextToken->tokenType == END_OF_LINE){ // 29. <scope-stat> -> END_OF_LINE
+    if (nextToken->tokenType == END_OF_LINE) { // 29. <scope-stat> -> END_OF_LINE
         return 0;
-    } else if (nextToken->tokenType == IDENTIFIER){ //  31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+    } else if (nextToken->tokenType == IDENTIFIER) { //  31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
         nextToken = getToken();
-        if(nextToken->tokenType != OPERATOR_ASSIGN){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != OPERATOR_ASSIGN) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
 
-        int err =0;
+        // if ID is_function then IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE                 //todo
+        //else expression
+        int err = 0;
         err = expression();
-        if(err != 0){
-            throwError(err,__LINE__);
+        if (err != 0) {
+            throwError(err, __LINE__);
             return err;
         }
 
-        nextToken=getToken();
-        if (nextToken->tokenType!=END_OF_LINE){
-            throwError(SYNTAX_ERROR,__LINE__);
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         return 0;
-    } else if (nextToken->tokenType == KEY_INPUT){ //  32. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
+    } else if (nextToken->tokenType == KEY_INPUT) { //  32. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
         nextToken = getToken();
-        if(nextToken->tokenType!= IDENTIFIER){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != IDENTIFIER) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
 
         //symtable.checkVarName();
-        nextToken=getToken();
-        if (nextToken->tokenType != END_OF_LINE){
-            throwError(SYNTAX_ERROR,__LINE__);
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         return 0;
-    } else if (nextToken->tokenType == KEY_PRINT){ // 33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
+    } else if (nextToken->tokenType == KEY_PRINT) { // 33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
 
-        int err =0;
+        int err = 0;
         err = LLrule_print_list();
-        if(err != 0){
-            throwError(err,__LINE__);
+        if (err != 0) {
+            throwError(err, __LINE__);
             return err;
         }
 
         return 0;
-    } else if (nextToken->tokenType == KEY_IF){ // 34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
-        int err =0;
+    } else if (nextToken->tokenType == KEY_IF) { // 34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
+        int err = 0;
         err = expression();
-        if(err != 0){
-            throwError(err,__LINE__);
+        if (err != 0) {
+            throwError(err, __LINE__);
             return err;
         }
 
         nextToken = getToken();
-        if(nextToken->tokenType!= KEY_THEN){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != KEY_THEN) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
 
         nextToken = getToken();
-        if(nextToken->tokenType!= END_OF_LINE){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
 
         err = scope_if_stat_list();
-        if(err != 0){
-            throwError(err,__LINE__);
+        if (err != 0) {
+            throwError(err, __LINE__);
             return err;
         }
 
         err = scope_else_stat_list();
-        if(err != 0){
-            throwError(err,__LINE__);
+        if (err != 0) {
+            throwError(err, __LINE__);
             return err;
         }
         nextToken = getToken();
-        if(nextToken->tokenType!= END_OF_LINE){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
 
         return 0;
-    } else if (nextToken->tokenType == KEY_DO){ // 35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
+    } else if (nextToken->tokenType == KEY_DO) { // 35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
         nextToken = getToken();
-        if(nextToken->tokenType!= KEY_WHILE){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != KEY_WHILE) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
-        int err =0;
+        int err = 0;
         err = expression();
-        if(err != 0){
-            throwError(err,__LINE__);
+        if (err != 0) {
+            throwError(err, __LINE__);
             return err;
         }
         nextToken = getToken();
-        if(nextToken->tokenType!= END_OF_LINE){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         err = scope_while_stat_list();
-        if(err != 0){
-            throwError(err,__LINE__);
+        if (err != 0) {
+            throwError(err, __LINE__);
             return err;
         }
         nextToken = getToken();
-        if(nextToken->tokenType!= END_OF_LINE){
-            throwError(SYNTAX_ERROR,__LINE__);
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         return 0;
+    } else {
+        throwError(SYNTAX_ERROR, __LINE__);
+        return SYNTAX_ERROR;
     }
-    throwError(SYNTAX_ERROR,__LINE__);
-    return SYNTAX_ERROR;
 }
 
+/*
+ * <fun-stat>
+ *  15. <fun-stat> -> END_OF_LINE
+ *  17. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+ *  18. <fun-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
+ *  19. <fun-stat> -> KEY_PRINT <print-list>
+ *  20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list> END_OF_LINE
+ *  21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list> END_OF_LINE
+ *  23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE //mee too
+ *  24. <fun-stat> -> KEY_RETURN <expression> END_OF_LINE
+ */
 int fun_stat(){
-    return 0;
+    if(nextToken->tokenType == END_OF_LINE){
+        return 0;
+    } else if (nextToken->tokenType == IDENTIFIER){ // 17. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+        nextToken = getToken();
+        if (nextToken->tokenType != OPERATOR_ASSIGN) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        // if ID is_function then IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE                 //todo
+        //else expression
+        int err = 0;
+        err = expression();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        return 0;
+    } else if (nextToken->tokenType == KEY_INPUT){   // 18. <fun-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
+        nextToken = getToken();
+        if (nextToken->tokenType != IDENTIFIER) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        //symtable.checkVarName();
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        return 0;
+    } else if (nextToken->tokenType == KEY_PRINT){  // 19. <fun-stat> -> KEY_PRINT <print-list>
+        int err = 0;
+        err = LLrule_print_list();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+
+        return 0;
+    } else if (nextToken->tokenType == KEY_IF){     // 20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list> END_OF_LINE
+
+        int err = 0;
+        err = expression();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+        nextToken = getToken();
+        if (nextToken->tokenType != KEY_THEN) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        err = fun_if_stat_list();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+
+        err = fun_else_stat_list();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        return 0;
+    } else if (nextToken->tokenType == KEY_DO){     // 21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list> END_OF_LINE
+        nextToken = getToken();
+        if (nextToken->tokenType != KEY_WHILE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        int err = 0;
+        err = expression();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        err = fun_while_stat_list();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        return 0;
+    } else if (nextToken->tokenType == KEY_RETURN){ // 24. <fun-stat> -> KEY_RETURN <expression> END_OF_LINE
+
+        int err = 0;
+        err = expression();
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+
+        nextToken = getToken();
+        if (nextToken->tokenType != END_OF_LINE) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        return 0;
+    } else{
+        throwError(SYNTAX_ERROR,__LINE__);
+        return SYNTAX_ERROR;
+    }
 }
 
 /*
@@ -379,8 +590,23 @@ int scope_while_stat_list(){
     return scope_while_stat_list();
 }
 
+/*
+ * <fun-while-stat-list>
+ *  <fun-while-stat-list> -> <fun-stat> <fun-while-stat-list>
+ *  <fun-while-stat-list> -> KEY_LOOP
+ */
 int fun_while_stat_list(){
-    return 0;
+    nextToken=getToken();
+    if(nextToken->tokenType == KEY_LOOP){
+        return 0;
+    }
+    int err = fun_stat();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+
+    return fun_while_stat_list();
 }
 
 /*
@@ -468,7 +694,22 @@ int scope_if_stat_list(){
  *  <fun-if-stat-list> -> KEY_ELSE END_OF_LINE
  */
 int fun_if_stat_list(){
-    return 0;
+    nextToken=getToken();
+    if(nextToken->tokenType==KEY_ELSE){
+        nextToken=getToken();
+        if(nextToken->tokenType != END_OF_LINE){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+        return 0;
+    }
+
+    int err = fun_stat();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+    return fun_if_stat_list();
 }
 
 /*
@@ -551,36 +792,41 @@ int LLrule_print(){
 int param_list(){
     nextToken = getToken();
 
+
+
+    if(nextToken->tokenType == IDENTIFIER) {
+
+
+        // new param;
+        // param->name = nextToken->data;
+
+        nextToken = getToken();
+        if (nextToken->tokenType != KEY_AS) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+
+        int paramDataType = 0;
+        int err = data_type(&paramDataType);
+        if (err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
+        //param->type= paramDataType;
+        //paramStack.Push(param)
+
+        err = param();
+        if(err != 0) {
+            throwError(err, __LINE__);
+        }
+        return err;
+    }
+
     if( nextToken->tokenType == CLOSING_BRACKET){
         return 0;
     }
 
-    if(nextToken->tokenType != IDENTIFIER){
-        throwError(SYNTAX_ERROR,__LINE__);
-        return SYNTAX_ERROR;
-    }
-
-    // new param;
-    // param->name = nextToken->data;
-
-    nextToken=getToken();
-    if (nextToken->tokenType != KEY_AS){
-       throwError(SYNTAX_ERROR,__LINE__);
-         return SYNTAX_ERROR;
-    }
-
-    int paramDataType = 0;
-    int err = data_type(&paramDataType);
-    if(err != 0){
-        throwError(err,__LINE__);
-        return err;
-    }
-    //param->type= paramDataType;
-    //paramStack.Push(param)
-
-    err = param();
-    throwError(err,__LINE__);
-    return err;
+    return SYNTAX_ERROR;
 }
 
 /*
@@ -593,34 +839,34 @@ int param(){
     if(nextToken->tokenType == CLOSING_BRACKET){    //11. <param> -> CLOSING_BRACKET
         return 0;
     }
-    if(nextToken->tokenType != COMMA){               //11. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
-       throwError(SYNTAX_ERROR,__LINE__);
-         return SYNTAX_ERROR;
-    }
-    nextToken=getToken();
-    if(nextToken->tokenType != IDENTIFIER){
-       throwError(SYNTAX_ERROR,__LINE__);
-        return SYNTAX_ERROR;
-    }
-    // new param;
-    // param->name = nextToken->data;
+    if(nextToken->tokenType == COMMA) {               //11. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
+        nextToken = getToken();
+        if (nextToken->tokenType != IDENTIFIER) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        // new param;
+        // param->name = nextToken->data;
 
-    nextToken=getToken();
-    if(nextToken->tokenType!=KEY_AS){
-       throwError(SYNTAX_ERROR,__LINE__);
-         return SYNTAX_ERROR;
-    }
-    int paramDataType=0;
-    int err=0;
-    err = data_type(&paramDataType);
-    if(err != 0){
-       throwError(SYNTAX_ERROR,__LINE__);
-        return SYNTAX_ERROR;
-    }
-    //param->dataType = paramDataType;
-    //paramStack.Push(param);
+        nextToken = getToken();
+        if (nextToken->tokenType != KEY_AS) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        int paramDataType = 0;
+        int err = 0;
+        err = data_type(&paramDataType);
+        if (err != 0) {
+            throwError(SYNTAX_ERROR, __LINE__);
+            return SYNTAX_ERROR;
+        }
+        //param->dataType = paramDataType;
+        //paramStack.Push(param);
 
-    return param();
+        return param();
+    }
+
+    return SYNTAX_ERROR;
 }
 
 /*
@@ -681,7 +927,7 @@ int data_type(int* type){
        *type = KEY_INTEGER;
         return 0;
     }
-   throwError(SYNTAX_ERROR,__LINE__);
+   //throwError(SYNTAX_ERROR,__LINE__);
     return SYNTAX_ERROR;
 }
 
