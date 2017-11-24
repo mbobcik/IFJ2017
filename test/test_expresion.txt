@@ -1,0 +1,6 @@
+scope
+
+    print 123+32+"aasfsdf";
+
+
+ends scope

@@ -932,5 +932,9 @@ int data_type(int* type){
 }
 
 int expression(){
+
+    nextToken = getToken();
+
+
     return 0;
 }

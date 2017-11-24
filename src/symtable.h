@@ -1,6 +1,10 @@
 #ifndef MAIN_SYMTABLE_H
 #define MAIN_SYMTABLE_H
 
+
+
+
+
 #include "scanner.h" // pro typy tokenu
 #include <stdbool.h>
 
@@ -247,7 +251,7 @@ int ht_setVarValue(ht_table * ptrTable, char * name, void * data);
  *              HT_VAR_BAD_DATATYPE pouzity spatny datatyp
  *              HT_VAR_OK           ok
  */
-int hte_setVarValueInt(ht_table * ptrTable, char * name, int data);
+int ht_setVarValueInt(ht_table *ptrTable, char *name, int data);
 
 
 /*
@@ -267,7 +271,7 @@ int hte_setVarValueInt(ht_table * ptrTable, char * name, int data);
  *              HT_VAR_BAD_DATATYPE pouzity spatny datatyp
  *              HT_VAR_OK           ok
  */
-int hte_setVarValueIntForFunc(ht_table * ptrTable, char *funcName, char *varName, int data);
+int ht_setVarValueIntForFunc(ht_table *ptrTable, char *funcName, char *varName, int data);
 
 /*
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
@@ -285,7 +289,7 @@ int hte_setVarValueIntForFunc(ht_table * ptrTable, char *funcName, char *varName
  *              HT_VAR_BAD_DATATYPE pouzity spatny datatyp
  *              HT_VAR_OK           ok
  */
-int hte_setVarValueDouble(ht_table * ptrTable, char * name, double data);
+int ht_setVarValueDouble(ht_table *ptrTable, char *name, double data);
 
 
 
@@ -306,7 +310,7 @@ int hte_setVarValueDouble(ht_table * ptrTable, char * name, double data);
  *              HT_VAR_BAD_DATATYPE pouzity spatny datatyp
  *              HT_VAR_OK           ok
  */
-int hte_setVarValueDoubleForFunc(ht_table * ptrTable, char *funcName, char *varName, double data);
+int ht_setVarValueDoubleForFunc(ht_table *ptrTable, char *funcName, char *varName, double data);
 
 /*
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
@@ -324,7 +328,7 @@ int hte_setVarValueDoubleForFunc(ht_table * ptrTable, char *funcName, char *varN
  *              HT_VAR_BAD_DATATYPE pouzity spatny datatyp
  *              HT_VAR_OK           ok
  */
-int hte_setVarValueString(ht_table *ptrTable, char *name, char *data);
+int ht_setVarValueString(ht_table *ptrTable, char *name, char *data);
 
 
 /*
@@ -464,6 +468,8 @@ tokenTypes ht_getDataTypeItem(tItem * item);
  *              HT_NULL_TABLE       non existing table
  */
 int ht_isVarExist(ht_table * ptrTable, char * name);
+
+
 
 /*
  * Kontrola jestli ma promenna v tab i definovanou hodnotu
@@ -670,6 +676,23 @@ int ht_isFunctionItem(tItem * func, char * name, tokenTypes retType, tFunctionPa
  */
 int ht_isFunction(ht_table * ptrTable, char * name, tokenTypes retType, tFunctionParams * params);
 
+
+/*
+ * Je to funkce?
+ *
+ * @author Meluzin
+ *
+ * @param ptrTable  tabulka symbolu
+ * @param name      jmeno funkce
+ * @param retType   return type
+ * @param params    parametry
+ * @return int
+ *                  HT_NULL_TABLE           null table
+ *                  HT_FUNC_NOT_FOUND       not foud func
+ *                  HT_FUNC_NOT_FUNC        not func
+ *                  HT_FUNC_OK              OK all same
+ */
+int ht_isFuncExist(ht_table * ptrTable, char * name);
 
 
 /*

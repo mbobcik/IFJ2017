@@ -8,6 +8,7 @@
 #include <float.h>
 #include "scanner.h"
 #include "error.h"
+#include "functions.h"
 
 
 token * getToken() {
@@ -25,7 +26,7 @@ token * getToken() {
     int escapeSeqNumber=0;
     char c;
 
-    while ((c = getchar())) {
+    while ((c = (char)fgetc(input))) {
 
          if (state == identifierFlag) {
             if (isalpha(c) || isdigit(c) || c == '_') {   // identifier alnum_ >> identifier

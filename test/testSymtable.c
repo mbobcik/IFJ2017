@@ -9,6 +9,106 @@
 
 int main() {
 
+    // Vytvoreni tabulky
+    ht_table  tabulkaSymbolu;
+    ht_init(&tabulkaSymbolu);
+    if (&tabulkaSymbolu == NULL) {
+        printf("\nChyba init\n");
+    }
+
+
+    /// Funkce
+
+    // Pridani funkce (bez parametru)
+    if (ht_addFunction(&tabulkaSymbolu, "funkce1", DOUBLE) == NULL) {
+        printf("\nChyba pri zakladani funkce.\n");
+    }
+
+    // Prametry
+    tFunctionParams  * params;
+    st_init(&params);
+
+    // add param
+    if ( ! st_addParam(params, "param1", DOUBLE)) {
+        printf("\nChyba pro zakladani parametru.\n");
+    }
+
+    // Pridani funkce (s parametry)
+    if (ht_addFunctionWithParams(&tabulkaSymbolu, "funkce2", DOUBLE, params) == NULL) {
+        printf("\nChyba pri zakladani funkce.\n");
+    }
+
+    // Prametry pozdejsi doplneni do funkce
+    tFunctionParams  * params2;
+    st_init(&params2);
+
+    // add param
+    if ( ! st_addParam(params2, "param1", DOUBLE)) {
+        printf("\nChyba pro zakladani parametru.\n");
+    }
+
+    if ( ! ht_setFuncParams(&tabulkaSymbolu, "funkce1", params2)) {
+        printf("\nChyba pri nastavovani parametru\n");
+    }
+
+
+    // Je to funkce?
+
+    // Neznam parametry
+    if (ht_isFuncExist(&tabulkaSymbolu, "funkce1") != HT_FUNC_OK) {
+        printf("\nFunkce neexistuje.\n");
+    }
+
+    // Znam parametry a chci si overit jestli je takhle deklarovana
+    // Prametry pozdejsi doplneni do funkce
+    tFunctionParams  * params3;
+    st_init(&params3);
+
+    // add param
+    if ( ! st_addParam(params3, "param1", DOUBLE)) {
+        printf("\nChyba pro zakladani parametru.\n");
+    }
+    if (! (ht_isFunction(&tabulkaSymbolu, "funkce1", DOUBLE, params3) == HT_FUNC_OK)) {
+        printf("\nTakova funkce deklarovana neni.\n");
+    }
+
+
+    // Nastaveni priznaku definovana pro funkci
+    ht_setFuncDefined(&tabulkaSymbolu, "funkce1");
+
+    // get tabulku symbolu
+    ht_getTableFor(&tabulkaSymbolu, "funkce1");
+
+
+    /// Promenne
+
+    // add
+    if (ht_addVariable(&tabulkaSymbolu, "promennaA", DOUBLE) == NULL) {
+        printf("\nNepodarilo se pridat promennou.\n");
+    }
+
+    // set value (hodnota je malloc a bude zkopirovane pomoci memcpy)
+    if (ht_setVarValueDouble(&tabulkaSymbolu, "promennaA", 10.0) != HT_VAR_OK) {
+        printf("\nNepodarilo se setnout promennou.\n");
+    }
+
+    // exists
+    if (ht_isVarExist(&tabulkaSymbolu, "promennaA") != HT_VAR_OK) {
+        printf("\nNeexistujici.\n");
+    }
+
+    // nastaveni hodnoty promenne ve funkci
+    //ht_setVarValueDoubleForFunc()
+
+
+
+
+
+    show_ht_table(&tabulkaSymbolu, false);
+
+
+    /*
+
     bool allTestsPass = true;
 
     ht_table  table;
@@ -494,7 +594,7 @@ int main() {
         printf("ok - not same\n");
     }
 
-    show_ht_table(&table, false);
+    //show_ht_table(&table, false);
 
     // je vse definovane?
     if ( ! ht_addVariable(ht_getTableFor(&table, "funcCreateWithParams"), "var1", INTEGER)) {
@@ -540,7 +640,7 @@ int main() {
 
     printf("\n  add var and set val: ");
     int intVal = 2;
-    if (hte_setVarValueInt(ht_getTableFor(&table, "funcCreateWithParams"), "var2I", intVal) != HT_VAR_OK) {
+    if (ht_setVarValueInt(ht_getTableFor(&table, "funcCreateWithParams"), "var2I", intVal) != HT_VAR_OK) {
         printf("bad - not working\n");
         allTestsPass = false;
     } else {
@@ -550,7 +650,7 @@ int main() {
 
     printf("\n  set bad datatype: ");
     double dblVal = 2.0;
-    if (hte_setVarValueDouble(ht_getTableFor(&table, "funcCreateWithParams"), "var2I", dblVal) == HT_VAR_BAD_DATATYPE) {
+    if (ht_setVarValueDouble(ht_getTableFor(&table, "funcCreateWithParams"), "var2I", dblVal) == HT_VAR_BAD_DATATYPE) {
         printf("ok - bad datatype\n");
     } else {
         printf("bad - not working\n");
@@ -565,7 +665,7 @@ int main() {
     }
     printf("\n  add var double: ");
     double dblVal2 = 2.0;
-    if (hte_setVarValueDouble(ht_getTableFor(&table, "funcCreateWithParams"), "var2D", dblVal2) != HT_VAR_OK) {
+    if (ht_setVarValueDouble(ht_getTableFor(&table, "funcCreateWithParams"), "var2D", dblVal2) != HT_VAR_OK) {
         printf("bad - not working\n");
         allTestsPass = false;
     } else {
@@ -580,7 +680,7 @@ int main() {
     }
     printf("\n  add var string: ");
     const char * valrS1 = "test value";
-    if (hte_setVarValueString(ht_getTableFor(&table, "funcCreateWithParams"), "var2S", valrS1) != HT_VAR_OK) {
+    if (ht_setVarValueString(ht_getTableFor(&table, "funcCreateWithParams"), "var2S", valrS1) != HT_VAR_OK) {
         printf("bad - not working\n");
         allTestsPass = false;
     } else {
@@ -594,7 +694,7 @@ int main() {
     printf("\n  add var string2: ");
     char * valrS2 = malloc(sizeof(char) * 5);
     strcpy(valrS2, "test");
-    if (hte_setVarValueString(ht_getTableFor(&table, "funcCreateWithParams"), "var2S2", valrS2) != HT_VAR_OK) {
+    if (ht_setVarValueString(ht_getTableFor(&table, "funcCreateWithParams"), "var2S2", valrS2) != HT_VAR_OK) {
         printf("bad - not working\n");
         allTestsPass = false;
     } else {
@@ -724,7 +824,7 @@ int main() {
     printf("\nNastaveni hodnot pomoci nazvu funkce:\n");
     printf("\n  Int set exist: ");
     int res;
-    if ((res = hte_setVarValueIntForFunc(&table, "funcCreateWithParams", "var2I", 123)) != HT_VAR_OK) {
+    if ((res = ht_setVarValueIntForFunc(&table, "funcCreateWithParams", "var2I", 123)) != HT_VAR_OK) {
         printf("bad - not working %d\n", res);
         allTestsPass = false;
     } else {
@@ -732,7 +832,7 @@ int main() {
     }
 
     printf("\n  Int set non exist: ");
-    if ((hte_setVarValueIntForFunc(&table, "funcCreateWithParams", "var2Sds", 1233)) == HT_VAR_NOT_FOUD) {
+    if ((ht_setVarValueIntForFunc(&table, "funcCreateWithParams", "var2Sds", 1233)) == HT_VAR_NOT_FOUD) {
         printf("ok - not found\n");
     } else {
         printf("bad - setted\n");
@@ -740,7 +840,7 @@ int main() {
     }
 
     printf("\n  Int set exist but not in func: ");
-    if ((hte_setVarValueIntForFunc(&table, "testFunkce", "var2I", 123)) == HT_VAR_NOT_FOUD) {
+    if ((ht_setVarValueIntForFunc(&table, "testFunkce", "var2I", 123)) == HT_VAR_NOT_FOUD) {
         printf("ok - not found\n");
     } else {
         printf("bad - setted\n");
@@ -748,7 +848,7 @@ int main() {
     }
 
     printf("\n  Double set exist: ");
-    if ((res = hte_setVarValueDoubleForFunc(&table, "funcCreateWithParams", "var2D", 1.23)) != HT_VAR_OK) {
+    if ((res = ht_setVarValueDoubleForFunc(&table, "funcCreateWithParams", "var2D", 1.23)) != HT_VAR_OK) {
         printf("bad - not working %d\n", res);
         allTestsPass = false;
     } else {
@@ -756,7 +856,7 @@ int main() {
     }
 
     printf("\n  Double set non exist: ");
-    if ((hte_setVarValueDoubleForFunc(&table, "funcCreateWithParams", "var2Dsdas", 1.23)) == HT_VAR_NOT_FOUD) {
+    if ((ht_setVarValueDoubleForFunc(&table, "funcCreateWithParams", "var2Dsdas", 1.23)) == HT_VAR_NOT_FOUD) {
         printf("ok - not found\n");
     } else {
         printf("bad - setted\n");
@@ -764,7 +864,7 @@ int main() {
     }
 
     printf("\n  Double set exist but not in func: ");
-    if ((hte_setVarValueDoubleForFunc(&table, "testFunkce", "var2D", 1.23)) == HT_VAR_NOT_FOUD) {
+    if ((ht_setVarValueDoubleForFunc(&table, "testFunkce", "var2D", 1.23)) == HT_VAR_NOT_FOUD) {
         printf("ok - not found\n");
     } else {
         printf("bad - setted\n");
@@ -809,6 +909,6 @@ int main() {
         printf("\n\nSome test wrong!!\n");
     }
 
-
+*/
     return 0;
 }

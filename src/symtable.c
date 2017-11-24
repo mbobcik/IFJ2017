@@ -276,7 +276,7 @@ int ht_setVarValue(ht_table *ptrTable, char *name, void *data) {
 
 
 
-int hte_setVarValueInt(ht_table *ptrTable, char *name, int data) {
+int ht_setVarValueInt(ht_table *ptrTable, char *name, int data) {
 
     // Existuje tabulka?
     if (ptrTable == NULL) {
@@ -311,7 +311,7 @@ int hte_setVarValueInt(ht_table *ptrTable, char *name, int data) {
     return ht_setVarValue(ptrTable, name, valInt);
 }
 
-int hte_setVarValueIntForFunc(ht_table *ptrTable, char *funcName, char *varName, int data) {
+int ht_setVarValueIntForFunc(ht_table *ptrTable, char *funcName, char *varName, int data) {
 
     // Existuje tabulka?
     if (ptrTable == NULL) {
@@ -363,7 +363,7 @@ int hte_setVarValueIntForFunc(ht_table *ptrTable, char *funcName, char *varName,
     return ht_setVarValueItem(item, valInt);
 }
 
-int hte_setVarValueDouble(ht_table *ptrTable, char *name, double data) {
+int ht_setVarValueDouble(ht_table *ptrTable, char *name, double data) {
 
     // Existuje tabulka?
     if (ptrTable == NULL) {
@@ -399,7 +399,7 @@ int hte_setVarValueDouble(ht_table *ptrTable, char *name, double data) {
 }
 
 
-int hte_setVarValueDoubleForFunc(ht_table *ptrTable, char *funcName, char *varName, double data) {
+int ht_setVarValueDoubleForFunc(ht_table *ptrTable, char *funcName, char *varName, double data) {
 
     // Existuje tabulka?
     if (ptrTable == NULL) {
@@ -452,7 +452,7 @@ int hte_setVarValueDoubleForFunc(ht_table *ptrTable, char *funcName, char *varNa
 }
 
 
-int hte_setVarValueString(ht_table *ptrTable, char *name, char *data) {
+int ht_setVarValueString(ht_table *ptrTable, char *name, char *data) {
 
     // Existuje tabulka?
     if (ptrTable == NULL) {
@@ -700,6 +700,7 @@ bool ht_isFuncDefinedItem(tItem *funkce) {
             return ((tFunctionData *) (funkce->data))->defined;
         }
     }
+    return false;
 }
 
 bool ht_isFuncDefined(ht_table *ptrTable, char *functionName) {
@@ -1168,6 +1169,26 @@ tItem *ht_getVarForFunc(ht_table *ptrTable, char *funcName, char *varName) {
     }
 
     return NULL;
+}
+
+int ht_isFuncExist(ht_table *ptrTable, char *name) {
+    
+    // exist?
+    if (ptrTable == NULL) {
+        return HT_NULL_TABLE;
+    }
+
+    tItem * item = ht_search(ptrTable, name);
+    if (item == NULL) {
+        return HT_FUNC_NOT_FOUND; // Not exist var
+    }
+
+    // not var?
+    if (item->type != function) {
+        return HT_FUNC_NOT_FUNC;
+    }
+
+    return HT_FUNC_OK; // exist
 }
 
 

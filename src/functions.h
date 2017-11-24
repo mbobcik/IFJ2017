@@ -14,6 +14,12 @@
 #include "symtable.h"
 
 
+
+#define DEBUG   true
+
+FILE *input;
+
+
 /*
  * Debug output
  *
