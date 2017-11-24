@@ -1,6 +1,23 @@
-declare function ahoj( as integer
+
+
 scope
 
-function ahoj ( as string
+
+dim a as integer 
+'print ;
+input a ;
+if then
+'
+    if then
+    else
+    end if
+'
+else
+print ;
+end if
+
+do while  print ;
+loop
 
 
+end scope

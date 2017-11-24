@@ -19,6 +19,7 @@
 <fun-st-list>
 12. <fun-st-list> -> <fun-stat> <fun-st-list>
 14. <fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+    <fun-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <fun-st-list>
 
 <fun-if-stat-list>
     <fun-if-stat-list> -> <fun-stat> <fun-if-stat-list>
@@ -34,10 +35,9 @@
 
 <fun-stat>
 15. <fun-stat> -> END_OF_LINE
-15. <fun-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>            // fix me
 17. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
 18. <fun-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
-19. <fun-stat> -> KEY_PRINT <print-list> END_OF_LINE
+19. <fun-stat> -> KEY_PRINT <print-list> 
 20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list> END_OF_LINE
 21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list> END_OF_LINE
 23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE //mee too
@@ -46,6 +46,7 @@
 <scope-st-list>
 25. <scope-st-list> -> <scope-stat> <scope-st-list>
 28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
+29. <scope-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <scope-st-list>
 
 <scope-if-stat-list>
     <scope-if-stat-list> -> <scope-stat> <scope-if-stat-list>
@@ -65,12 +66,11 @@
 
 <scope-stat>
 29. <scope-stat> -> END_OF_LINE
-29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>          //fixme
-31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
 32. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
-33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
+33. <scope-stat> -> KEY_PRINT <print-list>
 34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE 
 35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
+31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
 37. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE       // and me 
 
 <param-id-list>
@@ -82,8 +82,11 @@
 11. <param> -> COMMA IDENTIFIER <param-id>
 
 <print-list>
-40. <print-list> -> <expression> SEMICOLON <print-list>
-41. <print-list> -> <expression> SEMICOLON                  /// need rework
+40. <print-list> -> <expression> SEMICOLON <print>
+
+<print>
+    <print> -> END_OF_LINE
+    <print> -> <expression> SEMICOLON <print>
 
 <data-type>
 42. <data-type> -> KEY_STRING
@@ -108,13 +111,14 @@
 <param-id>
     <param-list>
     <param>
-<print-list>
+    <print-list>
+    <print>
     <prog>
-<scope-else-stat-list>
-<scope-if-stat-list>
+    <scope-else-stat-list>
+    <scope-if-stat-list>
     <scope-st-list>
     <scope-stat>
-<scope-while-stat-list>
+    <scope-while-stat-list>
 
 
 

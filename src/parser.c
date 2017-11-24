@@ -177,8 +177,9 @@ int end_prog(){
 
 /*
  * <scope-st-list>
- * 25. <scope-st-list> -> <scope-stat> <scope-st-list>
- * 28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
+ *  25. <scope-st-list> -> <scope-stat> <scope-st-list>
+ *  28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
+ *  29. <scope-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <scope-st-list>
  */
 int scope_st_list(){
    nextToken= getToken();
@@ -189,40 +190,17 @@ int scope_st_list(){
             return SYNTAX_ERROR;
         }
         return end_prog();
-    }
-
-    int err = scope_stat();             // 25. <scope-st-list> -> <scope-stat> <scope-st-list>
-    if(err != 0){
-        throwError(err,__LINE__);
-        return err;
-    }
-
-    return scope_st_list();
-}
-
-/*
- * <scope-stat>
- *  29. <scope-stat> -> END_OF_LINE
- *  29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>
- *  31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
- *  32. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
- *  33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
- *  34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
- *  35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
-*/
-int scope_stat(){
-    if(nextToken->tokenType == END_OF_LINE){ // 29. <scope-stat> -> END_OF_LINE
-        return 0;
-    } else if (nextToken->tokenType == KEY_DIM){ // 29. <scope-stat> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign>
-        nextToken = getToken();
-        if(nextToken->tokenType != IDENTIFIER){
+    } else if (nextToken->tokenType == KEY_DIM){    // 29. <scope-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <scope-st-list>
+        nextToken=getToken();
+        if (nextToken->tokenType != IDENTIFIER){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
-        //symTable newVariable.VarName = nextToken->data
+
+        //symtable.newVar.name = nextToken->data;
 
         nextToken=getToken();
-        if(nextToken->tokenType!= KEY_AS){
+        if (nextToken->tokenType != KEY_AS){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
@@ -238,6 +216,30 @@ int scope_stat(){
 
         return assign();
 
+    }
+
+    int err = scope_stat();             // 25. <scope-st-list> -> <scope-stat> <scope-st-list>
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+
+    return scope_st_list();
+}
+
+/*
+ * <scope-stat>
+ *  29. <scope-stat> -> END_OF_LINE
+ *  31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+ *  32. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
+ *  33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
+ *  34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
+ *  35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
+*/
+int scope_stat(){
+
+    if(nextToken->tokenType == END_OF_LINE){ // 29. <scope-stat> -> END_OF_LINE
+        return 0;
     } else if (nextToken->tokenType == IDENTIFIER){ //  31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
         nextToken = getToken();
         if(nextToken->tokenType != OPERATOR_ASSIGN){
@@ -275,18 +277,14 @@ int scope_stat(){
     } else if (nextToken->tokenType == KEY_PRINT){ // 33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
 
         int err =0;
-        err = print_list();
+        err = LLrule_print_list();
         if(err != 0){
             throwError(err,__LINE__);
             return err;
         }
-        nextToken=getToken();
-        if (nextToken->tokenType != END_OF_LINE){
-            throwError(SYNTAX_ERROR,__LINE__);
-            return SYNTAX_ERROR;
-        }
+
         return 0;
-    } else if (nextToken->tokenType == KEY_IF){ //  <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
+    } else if (nextToken->tokenType == KEY_IF){ // 34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
         int err =0;
         err = expression();
         if(err != 0){
@@ -310,12 +308,6 @@ int scope_stat(){
         if(err != 0){
             throwError(err,__LINE__);
             return err;
-        }
-
-        nextToken = getToken();
-        if(nextToken->tokenType!= KEY_ELSE){
-            throwError(SYNTAX_ERROR,__LINE__);
-            return SYNTAX_ERROR;
         }
 
         err = scope_else_stat_list();
@@ -367,16 +359,53 @@ int fun_stat(){
     return 0;
 }
 
+/*
+ * <scope-while-stat-list>
+ *  <scope-while-stat-list> -> <scope-stat> <scope-while-stat-list>
+ *  <scope-while-stat-list> -> KEY_LOOP
+ */
 int scope_while_stat_list(){
-    return 0;
+    nextToken=getToken();
+    if(nextToken->tokenType == KEY_LOOP){
+        return 0;
+    }
+
+    int err = scope_stat();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+
+    return scope_while_stat_list();
 }
 
 int fun_while_stat_list(){
     return 0;
 }
 
+/*
+ * <scope-else-stat-list>
+ *  <scope-else-stat-list> -> <scope-stat> <scope-else-stat-list>
+ *  <scope-else-stat-list> -> KEY_END KEY_IF
+ */
 int scope_else_stat_list(){
-    return 0;
+    nextToken=getToken();
+    if(nextToken->tokenType == KEY_END){
+        nextToken=getToken();
+        if(nextToken->tokenType != KEY_IF){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+        return 0;
+    }
+
+    int err = scope_stat();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+
+    return scope_else_stat_list();
 }
 
 /*
@@ -392,6 +421,7 @@ int fun_else_stat_list(){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
+        return 0;
     }
     int err = fun_stat();
     if(err != 0){
@@ -407,8 +437,29 @@ int fun_else_stat_list(){
     return 0;
 }
 
+/*
+ * <scope-if-stat-list>
+ *  <scope-if-stat-list> -> <scope-stat> <scope-if-stat-list>
+ *  <scope-if-stat-list> -> KEY_ELSE END_OF_LINE
+ */
 int scope_if_stat_list(){
-    return 0;
+    nextToken=getToken();
+    if(nextToken->tokenType==KEY_ELSE){
+        nextToken=getToken();
+        if(nextToken->tokenType != END_OF_LINE){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+        return 0;
+    }
+
+    int err = scope_stat();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+
+    return scope_if_stat_list();
 }
 
 /*
@@ -426,7 +477,7 @@ int fun_if_stat_list(){
  *  <assign> -> END_OF_LINE
  */
 int assign(){
-    nextToken=getToken();
+    nextToken = getToken();
     if(nextToken->tokenType == END_OF_LINE){ // <assign> -> END_OF_LINE
         return 0;
     }
@@ -450,12 +501,47 @@ int assign(){
 
 /*
  * <print-list>
- *  40. <print-list> -> <expression> SEMICOLON <print-list>
- *  41. <print-list> -> <expression> SEMICOLON
+ *  40. <print-list> -> <expression> SEMICOLON <print>
  */
-int print_list(){
-    return 0;
+int LLrule_print_list(){
+    int err = expression();
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+    nextToken=getToken();
+    if(nextToken->tokenType!= SEMICOLON){
+        throwError(SYNTAX_ERROR,__LINE__);
+        return SYNTAX_ERROR;
+    }
+    return LLrule_print();
 }
+
+/*
+ * <print>
+ *  <print> -> END_OF_LINE
+ *  <print> -> <expression> SEMICOLON <print>
+ */
+int LLrule_print(){
+    nextToken = getToken();
+    if( nextToken->tokenType == END_OF_LINE){
+        return 0;
+    }
+
+    /////////////////////////////////////////////////////// POZOR !! V NEXTTOKEN UZ JE TOKEN POTREBNY V EXPRESSION
+    int err = expression();                                         ///nejak si s tim porad, budouci ja
+    if(err != 0){
+        throwError(err,__LINE__);
+        return err;
+    }
+    nextToken=getToken();
+    if(nextToken->tokenType!= SEMICOLON){
+        throwError(SYNTAX_ERROR,__LINE__);
+        return SYNTAX_ERROR;
+    }
+    return LLrule_print();
+}
+
 
 /*
  * <param-list>
@@ -495,10 +581,6 @@ int param_list(){
     err = param();
     throwError(err,__LINE__);
     return err;
-}
-
-int param_id_list(){
-    return 0;
 }
 
 /*
@@ -541,8 +623,41 @@ int param(){
     return param();
 }
 
+/*
+ * <param-id-list>
+ *  39. <param-id-list> -> CLOSING_BRACKET
+ *  39. <param-id-list> -> IDENTIFIER <param-id>
+ */
+int param_id_list(){
+    nextToken=getToken();
+    if(nextToken->tokenType == CLOSING_BRACKET){
+        return 0;
+    }
+    if(nextToken->tokenType == IDENTIFIER){
+        return param_id();
+    }
+    return SYNTAX_ERROR;
+}
+
+/*
+ * <param-id>
+ *  11. <param> -> CLOSING_BRACKET
+ *  11. <param> -> COMMA IDENTIFIER <param-id>
+ */
 int param_id(){
-    return 0;
+    nextToken=getToken();
+    if(nextToken->tokenType == CLOSING_BRACKET){
+        return 0;
+    }
+    if(nextToken->tokenType == COMMA){
+        nextToken=getToken();
+        if(nextToken->tokenType != IDENTIFIER){
+            throwError(SYNTAX_ERROR,__LINE__);
+            return SYNTAX_ERROR;
+        }
+        return param_id();
+    }
+    return SYNTAX_ERROR;
 }
 
 /**
