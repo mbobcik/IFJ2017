@@ -35,7 +35,7 @@ token * getToken() {
                 // is Keyword?
                 newToken->tokenType = idOrKey(buffer->data);
                 strcpy(newToken->data, buffer->data);
-                ungetc(c, stdin);
+                ungetc(c, input);
                 return newToken;
             }
         } else if (state == integerFlag) {
@@ -54,7 +54,7 @@ token * getToken() {
             } else {                                // integer else >> integer end
                 newToken->tokenType = INTEGER;
                 strcpy(newToken->data, buffer->data);
-                ungetc(c, stdin);
+                ungetc(c, input);
 
                 if (INT_MAX == ((int) strtol(newToken->data, (char **) NULL, 10)))      // FIXME
                     throwError(LEXICAL_ERROR, __LINE__);
@@ -80,7 +80,7 @@ token * getToken() {
             } else {                                // double else >> double end
                 newToken->tokenType = DOUBLE;
                 strcpy(newToken->data, buffer->data);
-                ungetc(c, stdin);
+                ungetc(c, input);
 
                 if (FLT_MAX == ((double) strtod(newToken->data, NULL))) {   // FIXME
                     throwError(LEXICAL_ERROR, __LINE__);
@@ -114,7 +114,7 @@ token * getToken() {
             } else {                              // double E else >> doubleE end
                 newToken->tokenType = DOUBLE;
                 strcpy(newToken->data, buffer->data);
-                ungetc(c, stdin);
+                ungetc(c, input);
 
                 if (FLT_MAX == ((double) strtod(newToken->data, NULL))) {       //FIXME
                     throwError(LEXICAL_ERROR, __LINE__);
@@ -126,31 +126,43 @@ token * getToken() {
             if (c == '\n') {
                 state = startFlag;
             }                                               // line comment else >> line comment
+             if(c == EOF){
+                 newToken->tokenType=END_OF_FILE;
+                 return newToken;
+             }
         } else if (state == possibleBlockCommentFlag) {
             if (c == APOSTROPHE_ASCII_VALUE) {              // possible block comment apostrophe >> block comment
                 state = blockCommentFlag;
             } else {                                       // possible block comment else >> divide operator
                 newToken->tokenType = OPERATOR_DIVIDE;
-                ungetc(c, stdin);
+                ungetc(c, input);
                 return newToken;
             }
         } else if (state == blockCommentFlag) {
             if (c == APOSTROPHE_ASCII_VALUE) {              // block comment apostrophe >> possible block uncomment
                 state = possibleBlockUncommentFlag;
             }                                               // block comment else >> block comment
+             if(c == EOF){
+                 newToken->tokenType=END_OF_FILE;
+                 return newToken;
+             }
         } else if (state == possibleBlockUncommentFlag) {
             if (c == '/') {                                  // possible block uncomment '/' >> start
                 state = startFlag;
             } else {                                         // possible block uncomment else >> block comment
                 state = blockCommentFlag;
             }
+             if(c == EOF){
+                 newToken->tokenType=END_OF_FILE;
+                 return newToken;
+             }
         } else if (state == assignFlag) {
             if (c == '=') {                                 // assign '=' >> Equal operator
                 newToken->tokenType = OPERATOR_EQUAL;
                 return newToken;
             } else {
                 newToken->tokenType = OPERATOR_ASSIGN;      // assign else >> assign operator
-                ungetc(c, stdin);
+                ungetc(c, input);
                 return newToken;
             }
         } else if (state == lesserFlag) {
@@ -162,7 +174,7 @@ token * getToken() {
                 return newToken;
             } else {                                         // lesser else >> lesser
                 newToken->tokenType = OPERATOR_LESSER;
-                ungetc(c, stdin);
+                ungetc(c, input);
                 return newToken;
             }
         } else if (state == greaterFlag) {
@@ -171,7 +183,7 @@ token * getToken() {
                 return newToken;
             } else {                                        // greater else >> greater
                 newToken->tokenType = OPERATOR_GREATER;
-                ungetc(c, stdin);
+                ungetc(c, input);
                 return newToken;
             }
         } else if (state == toBeStringFlag) {

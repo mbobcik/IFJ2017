@@ -63,7 +63,6 @@ int prog(){
          }
          // check redeclaration
          // symtable->functionName = nextToken->data
-
          nextToken = getToken();
          if (nextToken->tokenType != OPENING_BRACKET){
             throwError(SYNTAX_ERROR,__LINE__);
@@ -99,7 +98,9 @@ int prog(){
          }
 
          err = prog();
-         throwError(err,__LINE__);
+         if(err != 0) {
+             throwError(err, __LINE__);
+         }
          return err;
      } else if (nextToken->tokenType == KEY_FUNCTION){ // 4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list>  KEY_AS <data-type> END_OF_LINE <fun-st-list>
 
