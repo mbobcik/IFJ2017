@@ -12,8 +12,9 @@
 #include "parser.h"
 #include "functions.h"
 #include "symtable.h"
+#include "expression.h"
 
-token * nextToken;
+
 
 int parse(){
 
@@ -873,23 +874,31 @@ int param(){
 /*
  * <param-id-list>
  *  39. <param-id-list> -> CLOSING_BRACKET
- *  39. <param-id-list> -> IDENTIFIER <param-id>
+ *  39. <param-id-list> -> <expression> <param-id>
  */
 int param_id_list(){
     nextToken=getToken();
     if(nextToken->tokenType == CLOSING_BRACKET){
         return 0;
     }
+    /*
     if(nextToken->tokenType == IDENTIFIER){
         return param_id();
     }
-    return SYNTAX_ERROR;
+     */
+
+    int err = expression();///////////////////////////////////////////////////////////////////////Pozor!!! Nacteny Token
+    if(err != 0) {
+        throwError(err, __LINE__);
+        return err;
+    }
+    return param_id();
 }
 
 /*
  * <param-id>
  *  11. <param> -> CLOSING_BRACKET
- *  11. <param> -> COMMA IDENTIFIER <param-id>
+ *  11. <param> -> COMMA <expression> <param-id>
  */
 int param_id(){
     nextToken=getToken();
@@ -897,11 +906,13 @@ int param_id(){
         return 0;
     }
     if(nextToken->tokenType == COMMA){
+        /*
         nextToken=getToken();
         if(nextToken->tokenType != IDENTIFIER){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
+         */
         return param_id();
     }
     return SYNTAX_ERROR;
@@ -932,10 +943,3 @@ int data_type(int* type){
     return SYNTAX_ERROR;
 }
 
-int expression(){
-
-    nextToken = getToken();
-
-
-    return 0;
-}

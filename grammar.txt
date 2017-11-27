@@ -40,7 +40,7 @@
 19. <fun-stat> -> KEY_PRINT <print-list> 
 20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list> END_OF_LINE
 21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list> END_OF_LINE
-23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE //mee too
+///23. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE //mee too
 24. <fun-stat> -> KEY_RETURN <expression> END_OF_LINE
 
 <scope-st-list>
@@ -75,11 +75,13 @@
 
 <param-id-list>
 39. <param-id-list> -> CLOSING_BRACKET
-39. <param-id-list> -> IDENTIFIER <param-id>               
+39. <param-id-list> -> <expression> <param-id>
+///39. <param-id-list> -> IDENTIFIER <param-id>               
 
 <param-id>
 11. <param> -> CLOSING_BRACKET
-11. <param> -> COMMA IDENTIFIER <param-id>
+11. <param> -> COMMA <expression> <param-id>
+///11. <param> -> COMMA IDENTIFIER <param-id>
 
 <print-list>
 40. <print-list> -> <expression> SEMICOLON <print>

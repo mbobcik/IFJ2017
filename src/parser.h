@@ -28,5 +28,6 @@ int scope_st_list();
 int scope_stat();
 int scope_while_stat_list();
 
+token * nextToken;
 
 #endif //SRC_PARSER_H

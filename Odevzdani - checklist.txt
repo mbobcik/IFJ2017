@@ -1,0 +1,10 @@
+0. smazat debug výpisky
+1. přesunout zdrojáky do složky ./k_odevzdani pomocí "make move"
+2. zkontrolovat přesun
+3. přesunout dokumentaci do složky ./k_odevzdani
+4. sepsat spravnym stylem rozdeleni(pozor na unix/windows ukonceni radku)
+5. přesunout rozdeleni do složky ./k_odevzdani
+6. přejít do složky ./k_odevzdani a zabalit obsah jako zip
+7. přejmenovat archív na xbobci00.zip
+8. odevzdat
+9. stáhnout a zkontrolovat pomocí make a celkově obsah
