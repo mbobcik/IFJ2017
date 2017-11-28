@@ -1,57 +1,57 @@
 
-declare function a (a as integer, b as double) as integer
-
-function a (a as double) as double
-input a
-print ;
-
-if then
-    if then
-        print ;      
-    else
-        input a
-        print ;
-        do while 
-            print ;
-        loop
-
-    end if
-else
-end if
-print ;
-
-
-do while 
- print ;
-loop
-
-end function
+declare function a(b as integer, c as double ) as integer
+declare function b(b as integer, c as double ) as double
+'function a (a as double) as double
+'input a
+'print ;
+'
+'if then
+'    if then
+'        print ;
+'    else
+'        input a
+'        print ;
+'        do while
+'            print ;
+'        loop
+'
+'    end if
+'else
+'end if
+'print ;
+'
+'
+'do while
+' print ;
+'loop
+'
+'end function
 
 scope
 
 
-dim a as integer =
-
-input a
-
-
-if then
-
-    if then
-    print ;  
-    else
-    input b
-    print ;
-    end if
-
-else
-print ;
-end if
-
-print ;
-do while 
- print ;
-loop
+'dim a as integer = a
+'
+'input a
+'
+'
+'if a then
+'
+'    if a then
+'    print a;
+'    else
+'    input b
+'    print b;
+'    end if
+'
+'else
+'print c ;
+'end if
+'
+'print a;
+'do while a
+'' print a;
+'loop
 
 
 end scope

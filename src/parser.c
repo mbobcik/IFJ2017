@@ -2,31 +2,79 @@
 // Created by Martin Bobčík on 11/23/17.
 //
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-
-#include "error.h"
-#include "scanner.h"
 #include "parser.h"
-#include "functions.h"
-#include "symtable.h"
 #include "expression.h"
 
 
-
-int parse(){
+int parse() {
 
     // init symbol table
-
+    ht_init(&globalSymTable);
+    if (&globalSymTable == NULL) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
     // add  built-in functions
+    tFunctionParams *paramStackLen;
+    st_init(&paramStackLen);
+    //////////////////////////////length
+    if (!st_addParam(paramStackLen, "s", STRING)) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    if (ht_addFunctionWithParams(&globalSymTable, "length", INTEGER, paramStackLen) == NULL) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
 
+    //////////////////////////////substr
+    tFunctionParams *paramStackSub;
+    st_init(&paramStackSub);
+    if (!st_addParam(paramStackSub, "s", STRING)) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    if (!st_addParam(paramStackSub, "i", INTEGER)) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    if (!st_addParam(paramStackSub, "n", INTEGER)) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    if (ht_addFunctionWithParams(&globalSymTable, "substr", STRING, paramStackSub) == NULL) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    //////////////////////////////asc
+    tFunctionParams *paramStackAsc;
+    st_init(&paramStackAsc);
+    if (!st_addParam(paramStackAsc, "s", STRING)) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    if (!st_addParam(paramStackAsc, "i", INTEGER)) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    if (ht_addFunctionWithParams(&globalSymTable, "asc", INTEGER, paramStackAsc) == NULL) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    //////////////////////////////chr
+    tFunctionParams *paramStackChr;
+    st_init(&paramStackChr);
+    if (!st_addParam(paramStackChr, "i", INTEGER)) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+    if (ht_addFunctionWithParams(&globalSymTable, "chr", STRING, paramStackChr) == NULL) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
+
+    ht_setFuncDefined(&globalSymTable, "length");
+    ht_setFuncDefined(&globalSymTable, "substr");
+    ht_setFuncDefined(&globalSymTable, "asc");
+    ht_setFuncDefined(&globalSymTable, "chr");
+    if (DEBUG){
+        show_ht_table(&globalSymTable, false);
+    }
     int err = prog();
     if(err != 0){
         return err;
     }
-
+    if (DEBUG){
+        show_ht_table(&globalSymTable, false);
+    }
     return 0;
 }
  /*
@@ -62,6 +110,8 @@ int prog(){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
          }
+         char* functionName= nextToken->data;
+
          // check redeclaration
          // symtable->functionName = nextToken->data
          nextToken = getToken();
@@ -70,7 +120,10 @@ int prog(){
             return SYNTAX_ERROR;
          }
 
-         err = param_list();
+         tFunctionParams * functionParams;
+         st_init(&functionParams);
+         err = param_list(functionParams);
+
          if(err != 0){
              throwError(err,__LINE__);
              return err;
@@ -91,6 +144,12 @@ int prog(){
              return err;
          }
          // symtable->functionDataType = actualDataType;
+         if ( (ht_isFuncExist(&globalSymTable, functionName) == HT_FUNC_OK)) {
+             throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+         }
+
+         if (ht_addFunctionWithParams(&globalSymTable, functionName, actualDataType, functionParams) == NULL) {
+             throwError(INTERNAL_ERROR,__LINE__);         }
 
          nextToken = getToken();
          if (nextToken->tokenType != END_OF_LINE){
@@ -123,7 +182,8 @@ int prog(){
             return SYNTAX_ERROR;
          }
 
-         err = param_list();
+         tFunctionParams *functionParams;
+         err = param_list(functionParams);
          if(err != 0){
              throwError(err,__LINE__);
              return err;
@@ -791,7 +851,7 @@ int LLrule_print(){
  * 9.  <param-list> -> CLOSING_BRACKET
  * 10. <param-list> -> IDENTIFIER KEY_AS <data-type> <param>
  */
-int param_list(){
+int param_list(tFunctionParams * paramStack){
     nextToken = getToken();
 
 
@@ -801,7 +861,8 @@ int param_list(){
 
         // new param;
         // param->name = nextToken->data;
-
+        char *paramName;
+        strcpy(paramName,nextToken->data);
         nextToken = getToken();
         if (nextToken->tokenType != KEY_AS) {
             throwError(SYNTAX_ERROR, __LINE__);
@@ -816,8 +877,10 @@ int param_list(){
         }
         //param->type= paramDataType;
         //paramStack.Push(param)
-
-        err = param();
+        if ( ! st_addParam(paramStack, paramName, paramDataType)) {
+            throwError(INTERNAL_ERROR, __LINE__);
+        }
+        err = param(paramStack);
         if(err != 0) {
             throwError(err, __LINE__);
         }
@@ -836,7 +899,7 @@ int param_list(){
  * 11. <param> -> CLOSING_BRACKET
  * 11. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
  */
-int param(){
+int param(tFunctionParams * paramStack){
     nextToken = getToken();
     if(nextToken->tokenType == CLOSING_BRACKET){    //11. <param> -> CLOSING_BRACKET
         return 0;
@@ -849,6 +912,8 @@ int param(){
         }
         // new param;
         // param->name = nextToken->data;
+        char *paramName;
+        strcpy(paramName,nextToken->data);
 
         nextToken = getToken();
         if (nextToken->tokenType != KEY_AS) {
@@ -862,10 +927,13 @@ int param(){
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
+        if ( ! st_addParam(paramStack, paramName, paramDataType)) {
+            throwError(INTERNAL_ERROR, __LINE__);
+        }
         //param->dataType = paramDataType;
         //paramStack.Push(param);
 
-        return param();
+        return param(paramStack);
     }
 
     return SYNTAX_ERROR;
@@ -928,15 +996,15 @@ int param_id(){
 int data_type(int* type){
     nextToken = getToken();
     if(nextToken->tokenType == KEY_STRING){
-        *type = KEY_STRING;
+        *type = STRING;
         return 0;
     }
     if(nextToken->tokenType == KEY_DOUBLE){
-       *type = KEY_DOUBLE;
+       *type = DOUBLE;
         return 0;
     }
     if(nextToken->tokenType == KEY_INTEGER){
-       *type = KEY_INTEGER;
+       *type = INTEGER;
         return 0;
     }
    //throwError(SYNTAX_ERROR,__LINE__);

@@ -71,7 +71,7 @@
 34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE 
 35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
 31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
-37. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE       // and me 
+///37. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE       // and me 
 
 <param-id-list>
 39. <param-id-list> -> CLOSING_BRACKET
