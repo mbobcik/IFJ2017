@@ -60,11 +60,16 @@ int parse() {
     if (ht_addFunctionWithParams(&globalSymTable, "chr", STRING, paramStackChr) == NULL) {
         throwError(INTERNAL_ERROR, __LINE__);
     }
+    //add table for main function (scope)
+    if (ht_addFunction(&globalSymTable, "scope", INTEGER) == NULL) {
+        throwError(INTERNAL_ERROR, __LINE__);
+    }
 
     ht_setFuncDefined(&globalSymTable, "length");
     ht_setFuncDefined(&globalSymTable, "substr");
     ht_setFuncDefined(&globalSymTable, "asc");
     ht_setFuncDefined(&globalSymTable, "chr");
+    ht_setFuncDefined(&globalSymTable, "scope");
     if (DEBUG){
         show_ht_table(&globalSymTable, false);
     }
@@ -72,6 +77,12 @@ int parse() {
     if(err != 0){
         return err;
     }
+
+    //check if all functions are defined
+    if(!ht_isAllDefined(&globalSymTable)){
+        throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+    }
+
     if (DEBUG){
         show_ht_table(&globalSymTable, false);
     }
@@ -94,7 +105,6 @@ int prog(){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
          }
-
          return scope_st_list();
 
      } else if (nextToken->tokenType == KEY_DECLARE) {   //2. <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
@@ -112,8 +122,6 @@ int prog(){
          }
          char* functionName= nextToken->data;
 
-         // check redeclaration
-         // symtable->functionName = nextToken->data
          nextToken = getToken();
          if (nextToken->tokenType != OPENING_BRACKET){
             throwError(SYNTAX_ERROR,__LINE__);
@@ -129,8 +137,6 @@ int prog(){
              return err;
          }
 
-         // somehow stuff parameters to symtable;
-
          nextToken = getToken();
          if(nextToken->tokenType != KEY_AS){
             throwError(SYNTAX_ERROR,__LINE__);
@@ -143,11 +149,11 @@ int prog(){
              throwError(err,__LINE__);
              return err;
          }
-         // symtable->functionDataType = actualDataType;
+         // check for redeclaration/override
          if ( (ht_isFuncExist(&globalSymTable, functionName) == HT_FUNC_OK)) {
              throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
          }
-
+            //add function to symtable
          if (ht_addFunctionWithParams(&globalSymTable, functionName, actualDataType, functionParams) == NULL) {
              throwError(INTERNAL_ERROR,__LINE__);         }
 
@@ -169,7 +175,7 @@ int prog(){
              throwError(SYNTAX_ERROR,__LINE__);
              return SYNTAX_ERROR;
          }
-
+         char* functionName= nextToken->data;
          //maybe chech if declared
 
          //check redefinition
@@ -183,6 +189,7 @@ int prog(){
          }
 
          tFunctionParams *functionParams;
+         st_init(&functionParams);
          err = param_list(functionParams);
          if(err != 0){
              throwError(err,__LINE__);
@@ -203,6 +210,27 @@ int prog(){
              return err;
          }
          //symtable->functionType = actualDataType ,,,, or check Datatype
+
+         // check if exist function with same name
+         if (ht_isFuncExist(&globalSymTable, functionName) == HT_FUNC_OK) {
+             //check if exists function with exact same params
+             if (ht_isFunction(&globalSymTable, functionName, actualDataType, functionParams) == HT_FUNC_OK){
+                 //check if isDefined
+                 if(ht_isFuncDefined(&globalSymTable,functionName)){ //if defined => redefinition => error
+                     throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+                 } else {                                            // flag as defined
+                     ht_setFuncDefined(&globalSymTable, functionName);
+                 }
+             } else { // exists with same name but different params/return value => override => error
+                 throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+             }
+         } else{                //no record of function with this name => add and flag as defined
+             //add function to symtable
+             if (ht_addFunctionWithParams(&globalSymTable, functionName, actualDataType, functionParams) == NULL) {
+                 throwError(INTERNAL_ERROR,__LINE__);
+             }
+             ht_setFuncDefined(&globalSymTable, functionName);
+         }
 
          nextToken = getToken();
          if (nextToken->tokenType != END_OF_LINE){
@@ -335,7 +363,6 @@ int scope_st_list(){
             return err;
         }
         // newVariable.VarType = variableDataType
-        // maybe VarType = nextToken->tokenType could be easier dum**ss
 
         err = assign();
         if(err != 0){
@@ -981,6 +1008,12 @@ int param_id(){
             return SYNTAX_ERROR;
         }
          */
+
+        int err = expression();
+        if(err != 0) {
+            throwError(err, __LINE__);
+            return err;
+        }
         return param_id();
     }
     return SYNTAX_ERROR;
@@ -1010,4 +1043,3 @@ int data_type(int* type){
    //throwError(SYNTAX_ERROR,__LINE__);
     return SYNTAX_ERROR;
 }
-
