@@ -5,7 +5,6 @@
 #include "parser.h"
 #include "expression.h"
 
-
 int parse() {
 
     // init symbol table
@@ -71,7 +70,7 @@ int parse() {
     ht_setFuncDefined(&globalSymTable, "chr");
     ht_setFuncDefined(&globalSymTable, "scope");
     if (DEBUG){
-        show_ht_table(&globalSymTable, false);
+       // show_ht_table(&globalSymTable, false);
     }
     int err = prog();
     if(err != 0){
@@ -231,6 +230,7 @@ int prog(){
              }
              ht_setFuncDefined(&globalSymTable, functionName);
          }
+         actuallyParsedFunction = functionName;
 
          nextToken = getToken();
          if (nextToken->tokenType != END_OF_LINE){
@@ -256,7 +256,6 @@ int prog(){
  *      <fun-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <fun-st-list>
  */
 int fun_st_list(){
-
     nextToken= getToken();
     if(nextToken->tokenType == KEY_END) {    //<fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
         nextToken = getToken();
@@ -277,6 +276,7 @@ int fun_st_list(){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
+        char *varName = nextToken->data;
         //symtable.newVar.name = nextToken->data;
         nextToken=getToken();
         if (nextToken->tokenType != KEY_AS){
@@ -291,6 +291,19 @@ int fun_st_list(){
             return err;
         }
         // newVariable.VarType = variableDataType
+        // get function sym table
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,actuallyParsedFunction);
+        if(functionTable == NULL){
+            throwError(INTERNAL_ERROR,__LINE__);
+        }
+        //check if exists
+        if (ht_isVarExist(functionTable, varName) == HT_VAR_OK) {
+            throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+        }
+
+        if (ht_addVariable(functionTable, varName, variableDataType) == NULL) {
+            throwError(INTERNAL_ERROR,__LINE__);
+        }
 
         err = assign();
         if(err != 0){
@@ -298,6 +311,20 @@ int fun_st_list(){
             return err;
         }
 
+        //maybe assign value to variable from assign() here
+        if(variableDataType == DOUBLE){
+            if (ht_setVarValueDouble(functionTable, varName, 0.0) != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR,__LINE__);
+            }
+        }else if (variableDataType == INTEGER){
+            if (ht_setVarValueInt(functionTable, varName, 0) != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR,__LINE__);
+            }
+        }else {
+            if (ht_setVarValueString(functionTable, varName, "") != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR,__LINE__);
+            }
+        }
         return fun_st_list();
     }
 
@@ -349,7 +376,7 @@ int scope_st_list(){
         }
 
         //symtable.newVar.name = nextToken->data;
-
+        char * varName=nextToken->data;
         nextToken=getToken();
         if (nextToken->tokenType != KEY_AS){
             throwError(SYNTAX_ERROR,__LINE__);
@@ -364,10 +391,38 @@ int scope_st_list(){
         }
         // newVariable.VarType = variableDataType
 
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,"scope");
+        if(functionTable == NULL){
+            throwError(INTERNAL_ERROR,__LINE__);
+        }
+        //check if exists
+        if (ht_isVarExist(functionTable, varName) == HT_VAR_OK) {
+            throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+        }
+
+        if (ht_addVariable(functionTable, varName, variableDataType) == NULL) {
+            throwError(INTERNAL_ERROR,__LINE__);
+        }
+
         err = assign();
         if(err != 0){
             throwError(err,__LINE__);
             return err;
+        }
+
+        //maybe assign value to variable from assign() here
+        if(variableDataType == DOUBLE){
+            if (ht_setVarValueDouble(functionTable, varName, 0.0) != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR,__LINE__);
+            }
+        }else if (variableDataType == INTEGER){
+            if (ht_setVarValueInt(functionTable, varName, 0) != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR,__LINE__);
+            }
+        }else {
+            if (ht_setVarValueString(functionTable, varName, "") != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR,__LINE__);
+            }
         }
 
         return scope_st_list();
@@ -396,6 +451,13 @@ int scope_stat() {
     if (nextToken->tokenType == END_OF_LINE) { // 29. <scope-stat> -> END_OF_LINE
         return 0;
     } else if (nextToken->tokenType == IDENTIFIER) { //  31. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+
+        // check if in table
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,"scope");
+        if (ht_isVarExist(functionTable, nextToken->data) != HT_VAR_OK) {
+            throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+        }
+
         nextToken = getToken();
         if (nextToken->tokenType != OPERATOR_ASSIGN) {
             throwError(SYNTAX_ERROR, __LINE__);
@@ -422,6 +484,12 @@ int scope_stat() {
         if (nextToken->tokenType != IDENTIFIER) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
+        }
+
+        // check if in table
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,"scope");
+        if (ht_isVarExist(functionTable, nextToken->data) != HT_VAR_OK) {
+            throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
         }
 
         //symtable.checkVarName();
@@ -528,7 +596,14 @@ int fun_stat(){
     if(nextToken->tokenType == END_OF_LINE){
         return 0;
     } else if (nextToken->tokenType == IDENTIFIER){ // 17. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+
+        //check if in table
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,actuallyParsedFunction);
+        if (ht_isVarExist(functionTable, nextToken->data) != HT_VAR_OK) {
+            throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
+        }
         nextToken = getToken();
+
         if (nextToken->tokenType != OPERATOR_ASSIGN) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -553,6 +628,11 @@ int fun_stat(){
         if (nextToken->tokenType != IDENTIFIER) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
+        }
+
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,actuallyParsedFunction);
+        if (ht_isVarExist(functionTable, nextToken->data) != HT_VAR_OK) {
+            throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
         }
 
         //symtable.checkVarName();
@@ -872,7 +952,6 @@ int LLrule_print(){
     return LLrule_print();
 }
 
-
 /*
  * <param-list>
  * 9.  <param-list> -> CLOSING_BRACKET
@@ -881,10 +960,7 @@ int LLrule_print(){
 int param_list(tFunctionParams * paramStack){
     nextToken = getToken();
 
-
-
     if(nextToken->tokenType == IDENTIFIER) {
-
 
         // new param;
         // param->name = nextToken->data;

@@ -41,5 +41,6 @@ int scope_while_stat_list();
 
 token * nextToken;
 ht_table globalSymTable;
+char *actuallyParsedFunction;
 
 #endif //SRC_PARSER_H
