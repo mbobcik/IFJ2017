@@ -263,7 +263,9 @@ token * getNextToken() {
                      return newToken;
                  }
             } else if (c == '=') {       // start '=' >> Assign
-                state = assignFlag;
+               // state = assignFlag;
+                 newToken->tokenType = OPERATOR_ASSIGN;
+                 return newToken;
             } else if (c == '<') {       // start '<' >> Lesser
                 state = lesserFlag;
             } else if (c == '>') {       // start '>' >> Greater
