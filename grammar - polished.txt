@@ -1,0 +1,55 @@
+1.  <prog> -> KEY_SCOPE END_OF_LINE <scope-st-list> 
+2.  <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
+3.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <fun-st-list> 
+4.  <prog> -> END_OF_LINE <prog>
+5.  <end-prog> -> END_OF_LINE <end-prog>
+6.  <end-prog> -> END_OF_FILE
+7.  <param-list> -> CLOSING_BRACKET
+8.  <param-list> -> IDENTIFIER KEY_AS <data-type> <param>   
+9.  <param> -> CLOSING_BRACKET
+10. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
+11. <fun-st-list> -> <fun-stat> <fun-st-list>
+12. <fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
+13. <fun-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <fun-st-list>
+14. <fun-if-stat-list> -> <fun-stat> <fun-if-stat-list>
+15. <fun-if-stat-list> -> KEY_ELSE END_OF_LINE
+16. <fun-if-stat-list> -> <fun-stat> <fun-else-stat-list>
+17. <fun-if-stat-list> -> KEY_END KEY_IF
+18. <fun-while-stat-list> -> <fun-stat> <fun-while-stat-list>
+19. <fun-while-stat-list> -> KEY_LOOP
+20. <fun-stat> -> END_OF_LINE
+21. <fun-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+22. <fun-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
+23. <fun-stat> -> KEY_PRINT <print-list> 
+24. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list> END_OF_LINE
+25. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list> END_OF_LINE
+26. <fun-stat> -> KEY_RETURN <expression> END_OF_LINE
+27. <scope-st-list> -> <scope-stat> <scope-st-list>
+28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
+29. <scope-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <scope-st-list>
+30. <scope-if-stat-list> -> <scope-stat> <scope-if-stat-list>
+31. <scope-if-stat-list> -> KEY_ELSE END_OF_LINE
+32. <scope-if-stat-list> -> <scope-stat> <scope-else-stat-list>
+33. <scope-if-stat-list> -> KEY_END KEY_IF
+34. <scope-while-stat-list> -> <scope-stat> <scope-while-stat-list>
+35. <scope-while-stat-list> -> KEY_LOOP
+36. <assign> -> OPERATOR_ASSIGN <expression> END_OF_LINE
+37. <assign> -> END_OF_LINE
+38. <scope-stat> -> END_OF_LINE
+39. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
+40. <scope-stat> -> KEY_PRINT <print-list>
+41. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE 
+42. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
+43. <scope-stat> -> IDENTIFIER OPERATOR_ASSIGN <expression> END_OF_LINE
+44. <param-id-list> -> CLOSING_BRACKET
+45. <param-id-list> -> <expression> <param-id>
+46. <param> -> CLOSING_BRACKET
+47. <param> -> COMMA <expression> <param-id>
+48. <print-list> -> <expression> SEMICOLON <print>
+49. <print> -> END_OF_LINE
+50. <print> -> <expression> SEMICOLON <print>
+51. <data-type> -> KEY_STRING
+52. <data-type> -> KEY_DOUBLE
+53. <data-type> -> KEY_INTEGER
+ 
+54. <expression>

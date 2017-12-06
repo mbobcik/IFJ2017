@@ -35,7 +35,7 @@
 #include "parser.h"
 
 
-#define DEBUG   true
+#define DEBUG   false
 
 
 
