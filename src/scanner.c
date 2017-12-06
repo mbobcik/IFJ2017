@@ -1,17 +1,16 @@
 //
 // Created by Martin Bobčík on 10/23/17.
 //
-
-#include <string.h>
-#include <ctype.h>
-#include <limits.h>
-#include <float.h>
 #include "scanner.h"
-#include "error.h"
-#include "functions.h"
 
 
-token * getToken() {
+token * getNextToken() {
+
+    // Pokud je nejaky token na znovuzpracovani
+    if (haveSomeTokenToProcess()) {
+        return getTokenToProcess();
+    }
+
     token *newToken;
     if (!(newToken = (token *) malloc(sizeof(token)))) {
         throwError(INTERNAL_ERROR, __LINE__);
@@ -426,4 +425,43 @@ void printBuffer(buffer * buffer){
 
 void printToken(token * token){
     printf("token->tokenType: %2d; token->data: %s\n",token->tokenType,token->data);
+}
+
+
+/*
+ * Ulozi posledni token znovu ke zpracovani
+ *
+ * @author Meluzin
+ */
+void putTokenBack(token * token) {
+    oldTokenToProcess = token;
+}
+
+/*
+ * Zkontroluje jestli je nejaky token ke
+ * znovu zpracovani
+ *
+ * @author Meluzin
+ */
+int haveSomeTokenToProcess(){
+    return (oldTokenToProcess == NULL)? 0: 1;
+}
+
+/*
+ * Vrati token ke znovuzpracovani
+ *
+ * @author Meluzin
+ */
+token * getTokenToProcess() {
+    if (haveSomeTokenToProcess()) {
+        token * ret = oldTokenToProcess;
+        oldTokenToProcess = NULL;
+
+        return ret;
+    }
+    return NULL;
+}
+
+token *getToken() {
+    return nextToken;
 }

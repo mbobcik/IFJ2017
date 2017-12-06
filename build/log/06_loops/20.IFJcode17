@@ -1,0 +1,61 @@
+# 2017-12-06 05:08:56.108613
+# SECTION: 06_loops
+# TEST: 20
+# INFO: cyclus with constant propagation
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  70 50 30 10
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' cyclus with constant propagation
+#   2: 
+#   3: scope
+#   4: 
+#   5:     dim a as integer
+#   6: 
+#   7:     a = 10
+#   8: 
+#   9:     a = a + 10
+#  10: 
+#  11:     dim b as integer
+#  12:     b = a + 20
+#  13: 
+#  14:     dim c as integer
+#  15: 
+#  16:     c = a + 10 + b
+#  17: 
+#  18:     do while c > 0
+#  19: 
+#  20:         print c;
+#  21:         c = c - a
+#  22:     loop
+#  23: 
+#  24: end scope
+
+########################################
+
+# ---
+

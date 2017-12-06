@@ -10,14 +10,33 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include <string.h>
+#include <ctype.h>
+#include <limits.h>
+#include <float.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
+
+
+#include "types.h"
+
+#include "error.h"
 #include "scanner.h"
 #include "symtable.h"
-
+#include "expression.h"
+#include "parser.h"
 
 
 #define DEBUG   true
 
-FILE *input;
 
 
 /*

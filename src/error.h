@@ -12,6 +12,9 @@
 #define SEMANTIC_ERROR 6
 #define INTERNAL_ERROR 99
 
+#include <stdio.h>
+#include <stdlib.h>
+
 void throwError(int errorNumber, int line);
 
 

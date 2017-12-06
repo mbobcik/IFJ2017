@@ -661,6 +661,10 @@ tItem *ht_addFunctionWithParams(ht_table *ptrTable, char *name, tokenTypes dataT
     // Pridani parametru
     tFunctionData * data = (tFunctionData*) fce->data;
     data->params = params;
+    
+    if (ht_paramsToTable(params, &(data->sTable)) < 1) {
+        return NULL;
+    }
 
     return fce;
 }
@@ -985,6 +989,12 @@ bool ht_setFuncParamsItem(tItem * item, tFunctionParams *params) {
     }
 
     data->params = params;
+    
+    // add params to table
+    if (ht_paramsToTable(params, &(data->sTable)) < 1) {
+        return NULL;
+    }
+    
 
     return true;
 }
@@ -1189,6 +1199,47 @@ int ht_isFuncExist(ht_table *ptrTable, char *name) {
     }
 
     return HT_FUNC_OK; // exist
+}
+
+int ht_paramsToTable(tFunctionParams *params, ht_table *table) {
+
+
+    tFunctionParams * tmp = params;
+    if (tmp == NULL) {
+        return -1;
+    }
+    
+    if (table == NULL) {
+        return -2;
+    }
+    
+    
+    while (tmp != NULL) {
+        
+        if (ht_addVariable(table, tmp->item->name, tmp->item->dataType) == NULL) {
+            return -3;
+        }
+
+        // set pocatecni hodnotu, aby byla definovana
+        if (tmp->item->dataType == STRING) {
+            if (ht_setVarValueString(table, tmp->item->name, "") != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR, __LINE__);
+            }
+        } else if (tmp->item->dataType == DOUBLE) {
+            if (ht_setVarValueDouble(table, tmp->item->name, 0.0) != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR, __LINE__);
+            }
+        } else if (tmp->item->dataType == INTEGER) {
+            if (ht_setVarValueInt(table, tmp->item->name, 0) != HT_VAR_OK) {
+                throwError(INTERNAL_ERROR, __LINE__);
+            }
+        }
+
+        tmp = tmp->nextParam;
+    }
+
+    return 1;
+    
 }
 
 

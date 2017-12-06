@@ -1,0 +1,73 @@
+# 2017-12-06 05:09:05.379868
+# SECTION: 96_programs
+# TEST: 07
+# INFO: Draw a pyramide
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 755 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# Enter number of rows
+# ? 
+#  1
+#  1 2
+#  1 2 3
+#  1 2 3 4
+#  1 2 3 4 5
+#  1 2 3 4 5 6
+#  1 2 3 4 5 6 7
+#  1 2 3 4 5 6 7 8
+#  1 2 3 4 5 6 7 8 9
+#  1 2 3 4 5 6 7 8 9 10
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 10
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Draw a pyramide
+#   2: scope 
+#   3:     print !"Enter number of rows\n";
+#   4:     dim rows as integer
+#   5:     input rows
+#   6:     
+#   7:     print !"\n";
+#   8:     
+#   9:     dim i as integer = 1
+#  10:     dim j as integer = 1
+#  11:     
+#  12:     do while i <= rows
+#  13:         j = 1
+#  14:         do while j <= i
+#  15:         
+#  16:         
+#  17:             print j;
+#  18:             j = j + 1
+#  19:         loop
+#  20:         print !"\n";
+#  21:         i = i + 1
+#  22:     loop
+#  23:     
+#  24: end scope
+#  25:     
+
+########################################
+
+# ---
+

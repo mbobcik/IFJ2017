@@ -1,0 +1,45 @@
+# 2017-12-06 05:08:55.965146
+# SECTION: 06_loops
+# TEST: 01
+# INFO: basic while loop
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  25.54 22.25 18.96 15.67 12.38 9.09 5.8 2.51-0.78-4.07-7.36-10.65-13.94-17.23-20.52-23.81
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' basic while loop
+#   2: scope
+#   3: 	dim a as double = 25.54
+#   4: 	do while a > (0 - 25)
+#   5: 		print a;
+#   6: 		a = a - 3.29
+#   7: 	loop
+#   8: end scope
+
+########################################
+
+# ---
+

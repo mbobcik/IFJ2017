@@ -1,0 +1,61 @@
+# 2017-12-06 05:09:05.342646
+# SECTION: 96_programs
+# TEST: 05
+# INFO: Print biggest number from three numbers
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 365 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# ? ? ?  150
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 100
+# 150
+# 125
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Print biggest number from three numbers
+#   2: scope
+#   3:     
+#   4:    dim a as integer
+#   5:    dim b as integer
+#   6:    dim c as integer
+#   7:    
+#   8:    input a
+#   9:    input b
+#  10:    input c
+#  11:    
+#  12:    if c > b then
+#  13:         if c > a then
+#  14:             print c;
+#  15:         else
+#  16:             print a;
+#  17:         end if
+#  18:    else
+#  19:         print b;
+#  20:    end if
+#  21:     
+#  22: end scope
+
+########################################
+
+# ---
+

@@ -1,0 +1,43 @@
+# 2017-12-06 05:08:55.436474
+# SECTION: 04_expressions
+# TEST: 41
+# INFO: maximum for C integer
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  2147483647
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' maximum for C integer
+#   2: 
+#   3: scope
+#   4:     dim a as integer = 2*1000000000+147*1000000+483*1000+647
+#   5:     print a;
+#   6: end scope
+
+########################################
+
+# ---
+

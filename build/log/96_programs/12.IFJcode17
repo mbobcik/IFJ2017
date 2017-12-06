@@ -1,0 +1,77 @@
+# 2017-12-06 05:09:05.478337
+# SECTION: 96_programs
+# TEST: 12
+# INFO: Leap year
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 755 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# Enter a year: ?  2016 is a leap year
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 2016
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Leap year
+#   2: 
+#   3: declare function modulo(divident as integer, divider as integer) as integer
+#   4: 
+#   5: function get_year() as integer
+#   6:     print !"Enter a year: ";
+#   7:     dim year as integer
+#   8:     input year
+#   9:     return year
+#  10: end function
+#  11: 
+#  12: function modulo(divident as integer, divider as integer) as integer
+#  13:     dim res as integer
+#  14:     res = divident - (divident \ divider) * divider
+#  15:     return res
+#  16: end function
+#  17: 
+#  18: scope
+#  19:     dim year as integer
+#  20:     year = get_year()
+#  21:     dim res as integer
+#  22:     res = modulo(year, 4)
+#  23:     if(res = 0) then
+#  24:         res = modulo(year, 100)
+#  25:         if(res = 0) then
+#  26:             ' year is divisible by 400, hence the year is a leap year
+#  27:             res = modulo(year, 400)
+#  28:             if (res = 0) then
+#  29:                 print year; !" is a leap year";
+#  30:             else
+#  31:                 print year; !" is not a leap year";
+#  32:             end if
+#  33:         else
+#  34:             print year; !" is a leap year";
+#  35:         end if
+#  36:     
+#  37:     else
+#  38:          print year; !" is not a leap year";
+#  39:     end if
+#  40: end scope
+
+########################################
+
+# ---
+

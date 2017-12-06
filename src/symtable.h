@@ -3,11 +3,7 @@
 
 
 
-
-
-#include "scanner.h" // pro typy tokenu
-#include <stdbool.h>
-
+#include "functions.h"
 
 #define HT_FUNC_OK              1 // ok func
 #define HT_FUNC_BAD_PARAMS      0 // no same params
@@ -23,73 +19,6 @@
 #define HT_ITERNAL_ERROR        -69 // interni error
 
 
-
-
-/*
- * Maximalni velikost tabulky
- */
-#define MAX_HTTABLE_SIZE 101
-
-/*
- * Identifikator symbolu
- */
-typedef char * tName;
-
-typedef enum {
-    variable,
-    function,
-    parametr
-} tItemType;
-
-
-
-/*
- * Polozka tabulky s odkazem na synonyma
- */
-typedef struct tItem {
-    tName           name;       // Nazev polozky (klic)
-    tokenTypes      dataType;   // Datovy typ
-    void *          data;       // Data (NULL - pro parametr funkce| tFunctionData | tVariableData)
-    tItemType       type;       // Typ zaznamu (funkce | variable)
-    struct tItem*   nextItem;   // Ukazatel na dalsi synonymum
-} tItem;
-
-
-
-typedef tItem* ht_table[MAX_HTTABLE_SIZE];
-
-/*
- * Data pro promennou
- */
-typedef struct tVariableData {
-    void *          data;       // ukazatel na hodnotu
-} tVariableData;
-
-/*
- * Data pro funkci
- */
-// Seznam parametru
-typedef struct tFunctionParams {
-    struct tItem* item;                 // aktualni Item (bude obsahovat jen name a dataType)
-    struct tFunctionParams* nextParam;  // dalsi parametr
-} tFunctionParams;
-
-typedef struct tFunctionData {
-    struct tFunctionParams* params;     // parametry funkce
-    ht_table                sTable;     // tabulka symbolu pro funkci
-    bool                    defined;    // definovana
-} tFunctionData;
-
-
-#include "functions.h"
-
-
-/*
- * Rozptylovací funkce. Zdroj: Martin
- *
- * @author Meluzin
- * @param name
- */
 int ht_hashCode(tName name);
 
 void ht_init(ht_table* prtTable);
@@ -110,7 +39,7 @@ void ht_clearAll(ht_table* prtTable);
 /// Seznam
 ///
 
-/*
+/**
  * Vytvoreni seznamu pro parametry
  *
  * @author Meluzin
@@ -119,7 +48,7 @@ void ht_clearAll(ht_table* prtTable);
  */
 void st_init(tFunctionParams ** list);
 
-/*
+/**
  * Pridani do seznamu
  *
  * @author Meluzin
@@ -131,7 +60,7 @@ void st_init(tFunctionParams ** list);
  */
 bool st_add(tFunctionParams * list, tItem * item);
 
-/*
+/**
  * Odstraneni posledniho z listu
  *
  * @author Meluzin
@@ -140,7 +69,7 @@ bool st_add(tFunctionParams * list, tItem * item);
  */
 void st_removeLast(tFunctionParams ** list);
 
-/*
+/**
  * Odstraneni vsech z listu
  *
  * @author Meluzin
@@ -149,7 +78,7 @@ void st_removeLast(tFunctionParams ** list);
  */
 void st_clear(tFunctionParams * list);
 
-/*
+/**
  * Porovna jestli obsahuje listA ty stejne prvky jako listB
  *
  * @author Meluzin
@@ -166,7 +95,7 @@ bool st_isSame(tFunctionParams * listA, tFunctionParams * listB);
 ///
 
 
-/*
+/**
  * Kontrola existence v listu
  *
  * @author Meluzin
@@ -177,7 +106,7 @@ bool st_isSame(tFunctionParams * listA, tFunctionParams * listB);
  */
 bool st_isExist(tFunctionParams * list, char * name);
 
-/*
+/**
  * Pridani do listu jako parametr
  *
  * @author Meluzi
@@ -189,7 +118,7 @@ bool st_isExist(tFunctionParams * list, char * name);
  */
 bool st_addParam(tFunctionParams * list, char * name, tokenTypes dataType);
 
-/*
+/**
  * Pridani variable do ht
  *
  * @author Meluzin
@@ -202,7 +131,7 @@ bool st_addParam(tFunctionParams * list, char * name, tokenTypes dataType);
 tItem * ht_addVariable(ht_table * ptrTable, char * name, tokenTypes dataType);
 
 
-/*
+/**
  * Nastavi hodnotu promenne. Data je potreba alokovat predem pomoci malloc
  *
  * @author Meluzin
@@ -217,7 +146,7 @@ tItem * ht_addVariable(ht_table * ptrTable, char * name, tokenTypes dataType);
  */
 int ht_setVarValueItem(tItem * item, void * data);
 
-/*
+/**
  * Nastavi hodnotu promenne. Data je potreba alokovat predem pomoci malloc
  *
  * @author Meluzin
@@ -235,7 +164,7 @@ int ht_setVarValueItem(tItem * item, void * data);
 int ht_setVarValue(ht_table * ptrTable, char * name, void * data);
 
 
-/*
+/**
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
  *
  * @author Meluzin
@@ -254,7 +183,7 @@ int ht_setVarValue(ht_table * ptrTable, char * name, void * data);
 int ht_setVarValueInt(ht_table *ptrTable, char *name, int data);
 
 
-/*
+/**
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
  *
  * @author Meluzin
@@ -273,7 +202,7 @@ int ht_setVarValueInt(ht_table *ptrTable, char *name, int data);
  */
 int ht_setVarValueIntForFunc(ht_table *ptrTable, char *funcName, char *varName, int data);
 
-/*
+/**
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
  *
  * @author Meluzin
@@ -293,7 +222,7 @@ int ht_setVarValueDouble(ht_table *ptrTable, char *name, double data);
 
 
 
-/*
+/**
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
  *
  * @author Meluzin
@@ -312,7 +241,7 @@ int ht_setVarValueDouble(ht_table *ptrTable, char *name, double data);
  */
 int ht_setVarValueDoubleForFunc(ht_table *ptrTable, char *funcName, char *varName, double data);
 
-/*
+/**
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
  *
  * @author Meluzin
@@ -331,7 +260,7 @@ int ht_setVarValueDoubleForFunc(ht_table *ptrTable, char *funcName, char *varNam
 int ht_setVarValueString(ht_table *ptrTable, char *name, char *data);
 
 
-/*
+/**
  * Nastavi hodnotu int promenne. Data si zkopiruje pomoci memcpy.
  *
  * @author Meluzin
@@ -350,7 +279,7 @@ int ht_setVarValueString(ht_table *ptrTable, char *name, char *data);
  */
 int ht_setVarValueStringForFunc(ht_table *ptrTable, char *funcName, char *varName, char *data);
 
-/*
+/**
  * Vrati hodnotu promenne
  *
  * @author Meluzin
@@ -361,7 +290,7 @@ int ht_setVarValueStringForFunc(ht_table *ptrTable, char *funcName, char *varNam
  */
 void * ht_getVarValue(ht_table * ptrTable, char * name);
 
-/*
+/**
  * Vrati hodnotu promenne jako Integer.
  * Pouze pokud je to Integer. Jinak NULL
  *
@@ -372,7 +301,7 @@ void * ht_getVarValue(ht_table * ptrTable, char * name);
  */
 int * ht_getVarValueIntItem(tItem * item);
 
-/*
+/**
  * Vrati hodnotu promenne jako Integer.
  * Pouze pokud je to Integer. Jinak NULL
  *
@@ -385,7 +314,7 @@ int * ht_getVarValueIntItem(tItem * item);
 int * ht_getVarValueInt(ht_table * ptrTable, char * name);
 
 
-/*
+/**
  * Vrati hodnotu promenne jako double.
  * Pouze pokud je to double. Jinak NULL
  *
@@ -396,7 +325,7 @@ int * ht_getVarValueInt(ht_table * ptrTable, char * name);
  */
 double * ht_getVarValueDoubleItem(tItem * item);
 
-/*
+/**
  * Vrati hodnotu promenne jako double.
  * Pouze pokud je to double. Jinak NULL
  *
@@ -408,7 +337,7 @@ double * ht_getVarValueDoubleItem(tItem * item);
  */
 double * ht_getVarValueDouble(ht_table * ptrTable, char * name);
 
-/*
+/**
  * Vrati hodnotu promenne jako string.
  * Pouze pokud je to string. Jinak NULL
  *
@@ -419,7 +348,7 @@ double * ht_getVarValueDouble(ht_table * ptrTable, char * name);
  */
 char * ht_getVarValueStringItem(tItem * item);
 
-/*
+/**
  * Vrati hodnotu promenne jako string.
  * Pouze pokud je to string. Jinak NULL
  *
@@ -432,7 +361,7 @@ char * ht_getVarValueStringItem(tItem * item);
 char * ht_getVarValueString(ht_table * ptrTable, char * name);
 
 
-/*
+/**
  * Vrati datovy typ polozky pokud se ji podari najit
  *
  * @author Meluzin
@@ -443,7 +372,7 @@ char * ht_getVarValueString(ht_table * ptrTable, char * name);
  */
 tokenTypes ht_getDataType(ht_table * ptrTable, char * name);
 
-/*
+/**
  * Vrati datovy typ Polozky. Jinak null
  *
  * @author Meluzin
@@ -454,7 +383,7 @@ tokenTypes ht_getDataType(ht_table * ptrTable, char * name);
 tokenTypes ht_getDataTypeItem(tItem * item);
 
 
-/*
+/**
  * Kontrola existence promenne v tabulce symbolu
  *
  * @author Meluzin
@@ -471,7 +400,7 @@ int ht_isVarExist(ht_table * ptrTable, char * name);
 
 
 
-/*
+/**
  * Kontrola jestli ma promenna v tab i definovanou hodnotu
  *
  * @author Meluzin
@@ -481,7 +410,7 @@ int ht_isVarExist(ht_table * ptrTable, char * name);
  */
 bool ht_isVarDefinedItem(tItem * item);
 
-/*
+/**
  * Kontrola jestli ma promenna v tab i definovanou hodnotu
  *
  * @author Meluzin
@@ -493,7 +422,7 @@ bool ht_isVarDefinedItem(tItem * item);
 bool ht_isVarDefined(ht_table * ptrTable, char * name);
 
 
-/*
+/**
  * Pridani funkci do ht
  *
  * @author Meluzin
@@ -505,7 +434,7 @@ bool ht_isVarDefined(ht_table * ptrTable, char * name);
  */
 tItem * ht_addFunction(ht_table * ptrTable, char * name, tokenTypes dataType);
 
-/*
+/**
  * Pridani funkci do ht
  *
  * @author Meluzin
@@ -518,7 +447,7 @@ tItem * ht_addFunction(ht_table * ptrTable, char * name, tokenTypes dataType);
  */
 tItem * ht_addFunctionWithParams(ht_table * ptrTable, char * name, tokenTypes dataType, tFunctionParams* params);
 
-/*
+/**
  * Vrati tabulku symbolu pro danou funkci
  *
  * @author Meluzin
@@ -530,7 +459,7 @@ tItem * ht_addFunctionWithParams(ht_table * ptrTable, char * name, tokenTypes da
 ht_table * ht_getTableFor(ht_table * ptrTable, char * functionName);
 
 
-/*
+/**
  * Zkontroluje jestli je funkce definovana
  *
  * @author Meluzin
@@ -541,7 +470,7 @@ ht_table * ht_getTableFor(ht_table * ptrTable, char * functionName);
 bool ht_isFuncDefinedItem(tItem * funkce);
 
 
-/*
+/**
  * Zkontroluje jestli je funkce definovana
  *
  * @author Meluzin
@@ -552,7 +481,7 @@ bool ht_isFuncDefinedItem(tItem * funkce);
  */
 bool ht_isFuncDefined(ht_table * ptrTable, char * functionName);
 
-/*
+/**
  * Zkontroluje jestli je funkce definovana
  * a zkontroluje jestli je definovana i tabulka funkce
  *
@@ -565,7 +494,7 @@ bool ht_isFuncDefined(ht_table * ptrTable, char * functionName);
 bool ht_isFuncDefinedWithTable(ht_table * ptrTable, char * functionName);
 
 
-/*
+/**
  * Nastavi funkci priznak ze je definovana
  *
  * @author Meluzin
@@ -574,7 +503,7 @@ bool ht_isFuncDefinedWithTable(ht_table * ptrTable, char * functionName);
  */
 void ht_setFuncDefinedItem(tItem * funkce);
 
-/*
+/**
  * Nastavi funkci priznak ze je definovana
  *
  * @author Meluzin
@@ -585,7 +514,7 @@ void ht_setFuncDefinedItem(tItem * funkce);
 void ht_setFuncDefined(ht_table * ptrTable, char * functionName);
 
 
-/*
+/**
  * Zkontroluje jestli je vse definovano
  *
  * @author Meluzin
@@ -596,7 +525,7 @@ bool ht_isAllDefined(ht_table * ptrTable);
 
 
 
-/*
+/**
  * Vytvoreni jednoho itemu pro parametry
  *
  * @author Meluzin
@@ -607,7 +536,7 @@ bool ht_isAllDefined(ht_table * ptrTable);
  */
 tItem * ht_creatItem(tName name, tokenTypes dataType);
 
-/*
+/**
  * Nastaveni parametru pro danou funkci
  *
  * @author Meluzin
@@ -618,7 +547,7 @@ tItem * ht_creatItem(tName name, tokenTypes dataType);
  */
 bool ht_setFuncParamsItem(tItem * item, tFunctionParams * params);
 
-/*
+/**
  * Nastaveni parametru pro danou funkci
  * Selectorem funkce je tabulka symbolu a nazev funkce
  *
@@ -634,7 +563,7 @@ bool ht_setFuncParams(ht_table * ptrTable, char * functionName, tFunctionParams 
 
 
 
-/*
+/**
  * Je item funkci, kterou definuji parametry (name, params, returnType)
  *
  * @author Meluzin
@@ -656,7 +585,7 @@ int ht_isFunctionItem(tItem * func, char * name, tokenTypes retType, tFunctionPa
 
 
 
-/*
+/**
  * Je to funkce, kterou definuji parametry (name, params, returnType)
  *
  * @author Meluzin
@@ -677,7 +606,7 @@ int ht_isFunctionItem(tItem * func, char * name, tokenTypes retType, tFunctionPa
 int ht_isFunction(ht_table * ptrTable, char * name, tokenTypes retType, tFunctionParams * params);
 
 
-/*
+/**
  * Je to funkce?
  *
  * @author Meluzin
@@ -695,7 +624,7 @@ int ht_isFunction(ht_table * ptrTable, char * name, tokenTypes retType, tFunctio
 int ht_isFuncExist(ht_table * ptrTable, char * name);
 
 
-/*
+/**
  * Ziskani promenne z dane funkce.
  * Pronde tabulku pro funkci a pak tabulku globalni
  *
@@ -709,8 +638,16 @@ int ht_isFuncExist(ht_table * ptrTable, char * name);
 tItem * ht_getVarForFunc(ht_table * ptrTable, char * funcName, char * varName);
 
 
-
-
+/**
+ * Predela parametry na radky v tabulce symbolu
+ *
+ * @author Meluzin
+ *
+ * @param params
+ * @param table
+ * @return int 1 ok   -1 no params  -2  no table   -3 chyba pri pridavani do tabulky
+ */
+int ht_paramsToTable(tFunctionParams* params, ht_table * table);
 
 
 #endif //MAIN_SYMTABLE_H

@@ -1,0 +1,44 @@
+# 2017-12-06 05:08:55.068773
+# SECTION: 04_expressions
+# TEST: 21
+# INFO: Add doubles with +e
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  1080.67
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Add doubles with +e
+#   2: scope
+#   3: dim ahoj as double = 10.8e2
+#   4: dim neboj as double = 67.432e-2
+#   5: 
+#   6: print ahoj + neboj;
+#   7: end scope
+
+########################################
+
+# ---
+

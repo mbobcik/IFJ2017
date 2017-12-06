@@ -6,18 +6,10 @@
 #define SRC_PARSER_H
 
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <stdbool.h>
-#include <string.h>
-
-#include "error.h"
-#include "scanner.h"
 #include "functions.h"
-#include "symtable.h"
 
 
-int assign();
+int assign(tokenTypes * expresionType);
 int data_type(int* type);
 int end_prog();
 int fun_else_stat_list();
@@ -39,8 +31,5 @@ int scope_st_list();
 int scope_stat();
 int scope_while_stat_list();
 
-token * nextToken;
-ht_table globalSymTable;
-char *actuallyParsedFunction;
 
 #endif //SRC_PARSER_H

@@ -1,0 +1,53 @@
+# 2017-12-06 05:08:54.052710
+# SECTION: 02_functions
+# TEST: 34
+# INFO: Print chr with double
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# :(
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Print chr with double
+#   2: 
+#   3: scope
+#   4:     dim a as double = 58.5
+#   5:     
+#   6:     dim b as string
+#   7:     b = !"GHGHGKGHGGHUILTZGFFG"
+#   8:     b = chr(a)
+#   9:     
+#  10:     print b;
+#  11:     
+#  12:     b = chr(40.3)
+#  13:     
+#  14:     print b;
+#  15:     
+#  16: end scope
+
+########################################
+
+# ---
+

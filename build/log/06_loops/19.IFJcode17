@@ -1,0 +1,56 @@
+# 2017-12-06 05:08:56.086731
+# SECTION: 06_loops
+# TEST: 19
+# INFO: substr in loop
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# hhgdfh_DFGkf5665678hggdfh_DFGkf5665678hgddfh_DFGkf5665678hgdffh_DFGkf5665678hgdfhh_DFGkf5665678hgdfh__DFGkf5665678hgdfh_DDFGkf5665678hgdfh_DFFGkf5665678hgdfh_DFGGkf5665678hgdfh_DFGkkf5665678hgdfh_DFGkff5665678hgdfh_DFGkf55665678hgdfh_DFGkf56665678hgdfh_DFGkf56665678hgdfh_DFGkf56655678hgdfh_DFGkf56656678hgdfh_DFGkf56656778hgdfh_DFGkf56656788
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' substr in loop
+#   2: 
+#   3: scope
+#   4:     dim a as string
+#   5:     dim a_len as integer
+#   6:     dim res as string
+#   7:     a = !"hgdfh_DFGkf5665678"
+#   8:     a_len =  length(a)
+#   9:     dim i as integer = 1
+#  10: 
+#  11:     do while i <= a_len
+#  12:         res = substr(a, 1, i)
+#  13:         print res;
+#  14:         res = substr(a, i, a_len)
+#  15:         print res;
+#  16:         i = i + 1
+#  17:     loop
+#  18:     
+#  19: end scope
+
+########################################
+
+# ---
+

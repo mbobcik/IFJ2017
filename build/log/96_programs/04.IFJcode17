@@ -1,0 +1,55 @@
+# 2017-12-06 05:09:05.317766
+# SECTION: 96_programs
+# TEST: 04
+# INFO: Add numbers from 1 to n
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# ? Soucet cisel do 100 je 5050
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 100
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Add numbers from 1 to n
+#   2: scope
+#   3:     
+#   4:     dim a as integer
+#   5:     input a
+#   6:     
+#   7:     dim b as integer = 1
+#   8:     
+#   9:     
+#  10:     dim soucet as integer
+#  11:     do while b <= a
+#  12:         soucet = soucet + b
+#  13:         b = b + 1
+#  14:     loop
+#  15:     
+#  16:     print !"Soucet cisel do"; a ; !" je"; soucet;
+#  17:     
+#  18: end scope
+
+########################################
+
+# ---
+

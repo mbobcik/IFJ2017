@@ -3,7 +3,6 @@
 //
 
 #include "parser.h"
-#include "expression.h"
 
 int parse() {
 
@@ -12,6 +11,8 @@ int parse() {
     if (&globalSymTable == NULL) {
         throwError(INTERNAL_ERROR, __LINE__);
     }
+    contextSymTable = &globalSymTable;
+
     // add  built-in functions
     tFunctionParams *paramStackLen;
     st_init(&paramStackLen);
@@ -96,10 +97,10 @@ int parse() {
   */
 int prog(){
      int err;
-     nextToken = getToken();
+     nextToken = getNextToken();
 
      if( nextToken->tokenType == KEY_SCOPE){        // 1. <prog> -> KEY_SCOPE END_OF_LINE <scope-st-list>
-         nextToken = getToken();
+         nextToken = getNextToken();
          if (nextToken->tokenType != END_OF_LINE){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -108,20 +109,20 @@ int prog(){
 
      } else if (nextToken->tokenType == KEY_DECLARE) {   //2. <prog> -> KEY_DECLARE KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list> KEY_AS <data-type> END_OF_LINE <prog>
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if (nextToken->tokenType != KEY_FUNCTION) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
          }
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if (nextToken->tokenType != IDENTIFIER){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
          }
          char* functionName= nextToken->data;
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if (nextToken->tokenType != OPENING_BRACKET){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -136,7 +137,7 @@ int prog(){
              return err;
          }
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if(nextToken->tokenType != KEY_AS){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -156,7 +157,7 @@ int prog(){
          if (ht_addFunctionWithParams(&globalSymTable, functionName, actualDataType, functionParams) == NULL) {
              throwError(INTERNAL_ERROR,__LINE__);         }
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if (nextToken->tokenType != END_OF_LINE){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -169,7 +170,7 @@ int prog(){
          return err;
      } else if (nextToken->tokenType == KEY_FUNCTION){ // 4.  <prog> -> KEY_FUNCTION IDENTIFIER OPENING_BRACKET <param-list>  KEY_AS <data-type> END_OF_LINE <fun-st-list>
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if(nextToken->tokenType != IDENTIFIER){
              throwError(SYNTAX_ERROR,__LINE__);
              return SYNTAX_ERROR;
@@ -181,7 +182,7 @@ int prog(){
 
          //symtable->funcionName = nextToken->data;
 
-         nextToken=getToken();
+         nextToken= getNextToken();
          if(nextToken->tokenType != OPENING_BRACKET){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -196,7 +197,7 @@ int prog(){
          }
          //stuff params to symtable
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if(nextToken->tokenType != KEY_AS){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -232,7 +233,7 @@ int prog(){
          }
          actuallyParsedFunction = functionName;
 
-         nextToken = getToken();
+         nextToken = getNextToken();
          if (nextToken->tokenType != END_OF_LINE){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -256,29 +257,29 @@ int prog(){
  *      <fun-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <fun-st-list>
  */
 int fun_st_list(){
-    nextToken= getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType == KEY_END) {    //<fun-st-list> -> KEY_END KEY_FUNCTION END_OF_LINE <prog>
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != KEY_FUNCTION) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
 
-        nextToken=getToken();
+        nextToken= getNextToken();
         if (nextToken->tokenType != END_OF_LINE){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
         return prog();
     } else if (nextToken->tokenType == KEY_DIM){    // <fun-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <fun-st-list>
-        nextToken=getToken();
+        nextToken= getNextToken();
         if (nextToken->tokenType != IDENTIFIER){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
         char *varName = nextToken->data;
         //symtable.newVar.name = nextToken->data;
-        nextToken=getToken();
+        nextToken= getNextToken();
         if (nextToken->tokenType != KEY_AS){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -296,6 +297,8 @@ int fun_st_list(){
         if(functionTable == NULL){
             throwError(INTERNAL_ERROR,__LINE__);
         }
+        contextSymTable = functionTable;
+
         //check if exists
         if (ht_isVarExist(functionTable, varName) == HT_VAR_OK) {
             throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
@@ -305,10 +308,16 @@ int fun_st_list(){
             throwError(INTERNAL_ERROR,__LINE__);
         }
 
-        err = assign();
+        tokenTypes expresionType;
+        err = assign(&expresionType);
         if(err != 0){
             throwError(err,__LINE__);
             return err;
+        }
+
+        // Kotrola datoveho typu
+        if (expresionType != variableDataType) {
+            throwError(TYPE_SEMANTIC_ERROR, __LINE__); // pr. do int dava double
         }
 
         //maybe assign value to variable from assign() here
@@ -342,7 +351,7 @@ int fun_st_list(){
  *  8.  <end-prog> -> END_OF_FILE
  */
 int end_prog(){
-    nextToken = getToken();
+    nextToken = getNextToken();
     if(nextToken->tokenType == END_OF_FILE){
         return 0;
     }else if (nextToken->tokenType == END_OF_LINE){
@@ -360,16 +369,16 @@ int end_prog(){
  *  29. <scope-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <scope-st-list>
  */
 int scope_st_list(){
-   nextToken= getToken();
+   nextToken= getNextToken();
     if(nextToken->tokenType == KEY_END){    //28. <scope-st-list> -> KEY_END KEY_SCOPE <end-prog>
-        nextToken=getToken();
+        nextToken= getNextToken();
         if(nextToken->tokenType != KEY_SCOPE){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
         return end_prog();
     } else if (nextToken->tokenType == KEY_DIM){    // 29. <scope-st-list> -> KEY_DIM IDENTIFIER KEY_AS <data-type> <assign> <scope-st-list>
-        nextToken=getToken();
+        nextToken= getNextToken();
         if (nextToken->tokenType != IDENTIFIER){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -377,7 +386,7 @@ int scope_st_list(){
 
         //symtable.newVar.name = nextToken->data;
         char * varName=nextToken->data;
-        nextToken=getToken();
+        nextToken= getNextToken();
         if (nextToken->tokenType != KEY_AS){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -395,6 +404,8 @@ int scope_st_list(){
         if(functionTable == NULL){
             throwError(INTERNAL_ERROR,__LINE__);
         }
+        contextSymTable = functionTable;
+
         //check if exists
         if (ht_isVarExist(functionTable, varName) == HT_VAR_OK) {
             throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
@@ -404,11 +415,24 @@ int scope_st_list(){
             throwError(INTERNAL_ERROR,__LINE__);
         }
 
-        err = assign();
+        tokenTypes typeOfExpresion;
+        err = assign(&typeOfExpresion);
         if(err != 0){
             throwError(err,__LINE__);
             return err;
         }
+
+        // Kontrola jestli sedi datove typy
+        tokenTypes varType = ht_getDataType(functionTable, varName);
+        if (varType != typeOfExpresion) {
+            if ((varType == DOUBLE) && (typeOfExpresion == INTEGER)) {
+                // taky ok, jen se to pretypuje
+            }
+            else {
+                throwError(TYPE_SEMANTIC_ERROR, __LINE__);
+            }
+        }
+
 
         //maybe assign value to variable from assign() here
         if(variableDataType == DOUBLE){
@@ -458,7 +482,10 @@ int scope_stat() {
             throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
         }
 
-        nextToken = getToken();
+        contextSymTable = functionTable;
+        char * varName = nextToken->data;
+
+        nextToken = getNextToken();
         if (nextToken->tokenType != OPERATOR_ASSIGN) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -466,21 +493,33 @@ int scope_stat() {
 
         // if ID is_function then IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE                 //todo
         //else expression
+        tokenTypes expresionType;
         int err = 0;
-        err = expression();
+        err = expression(&expresionType);
         if (err != 0) {
             throwError(err, __LINE__);
             return err;
         }
 
-        nextToken = getToken();
+        // Kontrola jestli sedi datove typy
+        tokenTypes varType = ht_getDataType(functionTable, varName);
+        if (varType != expresionType) {
+            if ((varType == DOUBLE) && (expresionType == INTEGER)) {
+                // taky ok, jen se to pretypuje
+            }
+            else {
+                throwError(TYPE_SEMANTIC_ERROR, __LINE__);
+            }
+        }
+
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         return 0;
     } else if (nextToken->tokenType == KEY_INPUT) { //  32. <scope-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != IDENTIFIER) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -493,13 +532,16 @@ int scope_stat() {
         }
 
         //symtable.checkVarName();
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         return 0;
     } else if (nextToken->tokenType == KEY_PRINT) { // 33. <scope-stat> -> KEY_PRINT <print-list> END_OF_LINE
+
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,"scope");
+        contextSymTable = functionTable;
 
         int err = 0;
         err = LLrule_print_list();
@@ -510,20 +552,26 @@ int scope_stat() {
 
         return 0;
     } else if (nextToken->tokenType == KEY_IF) { // 34. <scope-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <scope-if-stat-list> <scope-else-stat-list> END_OF_LINE
+
+        // check if in table
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,"scope");
+        contextSymTable = functionTable;
+
         int err = 0;
-        err = expression();
+        tokenTypes expresionType;
+        err = expression(&expresionType);
         if (err != 0) {
             throwError(err, __LINE__);
             return err;
         }
 
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != KEY_THEN) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
 
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -540,7 +588,7 @@ int scope_stat() {
             throwError(err, __LINE__);
             return err;
         }
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -548,18 +596,24 @@ int scope_stat() {
 
         return 0;
     } else if (nextToken->tokenType == KEY_DO) { // 35. <scope-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <scope-while-stat-list> END_OF_LINE
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != KEY_WHILE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
+
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,"scope");
+        contextSymTable = functionTable;
+
         int err = 0;
-        err = expression();
+        tokenTypes expresionType;
+        err = expression(&expresionType);
         if (err != 0) {
             throwError(err, __LINE__);
             return err;
         }
-        nextToken = getToken();
+
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -569,7 +623,7 @@ int scope_stat() {
             throwError(err, __LINE__);
             return err;
         }
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -602,7 +656,11 @@ int fun_stat(){
         if (ht_isVarExist(functionTable, nextToken->data) != HT_VAR_OK) {
             throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
         }
-        nextToken = getToken();
+
+        contextSymTable = functionTable;
+        char * varName = nextToken->data;
+
+        nextToken = getNextToken();
 
         if (nextToken->tokenType != OPERATOR_ASSIGN) {
             throwError(SYNTAX_ERROR, __LINE__);
@@ -612,19 +670,32 @@ int fun_stat(){
         // if ID is_function then IDENTIFIER OPERATOR_ASSIGN IDENTIFIER OPENING_BRACKET <param-id-list> END_OF_LINE                 //todo
         //else expression
         int err = 0;
-        err = expression();
+        tokenTypes expresionType;
+        err = expression(&expresionType);
         if (err != 0) {
             throwError(err, __LINE__);
             return err;
         }
-        nextToken = getToken();
+
+        // Kontrola jestli sedi datove typy
+        tokenTypes varType = ht_getDataType(functionTable, varName);
+        if (varType != expresionType) {
+            if ((varType == DOUBLE) && (expresionType == INTEGER)) {
+                // taky ok, jen se to pretypuje
+            }
+            else {
+                throwError(TYPE_SEMANTIC_ERROR, __LINE__);
+            }
+        }
+
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         return 0;
     } else if (nextToken->tokenType == KEY_INPUT){   // 18. <fun-stat> -> KEY_INPUT IDENTIFIER END_OF_LINE
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != IDENTIFIER) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -635,14 +706,20 @@ int fun_stat(){
             throwError(VARIABLE_SEMANTIC_ERROR,__LINE__);
         }
 
+        contextSymTable = functionTable;
+
         //symtable.checkVarName();
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
         return 0;
     } else if (nextToken->tokenType == KEY_PRINT){  // 19. <fun-stat> -> KEY_PRINT <print-list>
+
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,actuallyParsedFunction);
+        contextSymTable = functionTable;
+
         int err = 0;
         err = LLrule_print_list();
         if (err != 0) {
@@ -653,18 +730,22 @@ int fun_stat(){
         return 0;
     } else if (nextToken->tokenType == KEY_IF){     // 20. <fun-stat> -> KEY_IF <expression> KEY_THEN END_OF_LINE <fun-if-stat-list> <fun-else-stat-list> END_OF_LINE
 
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,actuallyParsedFunction);
+        contextSymTable = functionTable;
+
         int err = 0;
-        err = expression();
+        tokenTypes expresionType;
+        err = expression(&expresionType);
         if (err != 0) {
             throwError(err, __LINE__);
             return err;
         }
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != KEY_THEN) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -682,7 +763,7 @@ int fun_stat(){
             return err;
         }
 
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -690,18 +771,23 @@ int fun_stat(){
 
         return 0;
     } else if (nextToken->tokenType == KEY_DO){     // 21. <fun-stat> -> KEY_DO KEY_WHILE <expression> END_OF_LINE <fun-while-stat-list> END_OF_LINE
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != KEY_WHILE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
         }
+
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,actuallyParsedFunction);
+        contextSymTable = functionTable;
+
         int err = 0;
-        err = expression();
+        tokenTypes expresionType;
+        err = expression(&expresionType);
         if (err != 0) {
             throwError(err, __LINE__);
             return err;
         }
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -711,7 +797,7 @@ int fun_stat(){
             throwError(err, __LINE__);
             return err;
         }
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -719,14 +805,18 @@ int fun_stat(){
         return 0;
     } else if (nextToken->tokenType == KEY_RETURN){ // 24. <fun-stat> -> KEY_RETURN <expression> END_OF_LINE
 
+        ht_table *functionTable= ht_getTableFor(&globalSymTable,actuallyParsedFunction);
+        contextSymTable = functionTable;
+
         int err = 0;
-        err = expression();
+        tokenTypes expresionType;
+        err = expression(&expresionType);
         if (err != 0) {
             throwError(err, __LINE__);
             return err;
         }
 
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != END_OF_LINE) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -745,7 +835,7 @@ int fun_stat(){
  *  <scope-while-stat-list> -> KEY_LOOP
  */
 int scope_while_stat_list(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType == KEY_LOOP){
         return 0;
     }
@@ -765,7 +855,7 @@ int scope_while_stat_list(){
  *  <fun-while-stat-list> -> KEY_LOOP
  */
 int fun_while_stat_list(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType == KEY_LOOP){
         return 0;
     }
@@ -784,9 +874,9 @@ int fun_while_stat_list(){
  *  <scope-else-stat-list> -> KEY_END KEY_IF
  */
 int scope_else_stat_list(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType == KEY_END){
-        nextToken=getToken();
+        nextToken= getNextToken();
         if(nextToken->tokenType != KEY_IF){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -809,9 +899,9 @@ int scope_else_stat_list(){
  *  <fun-if-stat-list> -> KEY_END KEY_IF
  */
 int fun_else_stat_list(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType == KEY_END){
-        nextToken=getToken();
+        nextToken= getNextToken();
         if (nextToken->tokenType != KEY_IF){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -838,9 +928,9 @@ int fun_else_stat_list(){
  *  <scope-if-stat-list> -> KEY_ELSE END_OF_LINE
  */
 int scope_if_stat_list(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType==KEY_ELSE){
-        nextToken=getToken();
+        nextToken= getNextToken();
         if(nextToken->tokenType != END_OF_LINE){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -863,9 +953,9 @@ int scope_if_stat_list(){
  *  <fun-if-stat-list> -> KEY_ELSE END_OF_LINE
  */
 int fun_if_stat_list(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType==KEY_ELSE){
-        nextToken=getToken();
+        nextToken= getNextToken();
         if(nextToken->tokenType != END_OF_LINE){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
@@ -886,8 +976,8 @@ int fun_if_stat_list(){
  *  <assign> -> OPERATOR_ASSIGN <expression> END_OF_LINE
  *  <assign> -> END_OF_LINE
  */
-int assign(){
-    nextToken = getToken();
+int assign(tokenTypes * expresionType){
+    nextToken = getNextToken();
     if(nextToken->tokenType == END_OF_LINE){ // <assign> -> END_OF_LINE
         return 0;
     }
@@ -896,12 +986,12 @@ int assign(){
         return SYNTAX_ERROR;
     }
     int err =0;
-    err = expression();
+    err = expression(expresionType);
     if(err != 0){
         throwError(err,__LINE__);
         return err;
     }
-    nextToken = getToken();
+    nextToken = getNextToken();
     if(nextToken->tokenType!= END_OF_LINE){
         throwError(SYNTAX_ERROR,__LINE__);
         return SYNTAX_ERROR;
@@ -914,12 +1004,15 @@ int assign(){
  *  40. <print-list> -> <expression> SEMICOLON <print>
  */
 int LLrule_print_list(){
-    int err = expression();
+
+
+    tokenTypes expresionType;
+    int err = expression(&expresionType);
     if(err != 0){
         throwError(err,__LINE__);
         return err;
     }
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType!= SEMICOLON){
         throwError(SYNTAX_ERROR,__LINE__);
         return SYNTAX_ERROR;
@@ -933,18 +1026,19 @@ int LLrule_print_list(){
  *  <print> -> <expression> SEMICOLON <print>
  */
 int LLrule_print(){
-    nextToken = getToken();
+    nextToken = getNextToken();
     if( nextToken->tokenType == END_OF_LINE){
         return 0;
     }
 
     /////////////////////////////////////////////////////// POZOR !! V NEXTTOKEN UZ JE TOKEN POTREBNY V EXPRESSION
-    int err = expression();                                         ///nejak si s tim porad, budouci ja
+    tokenTypes expresionType;
+    int err = expression(&expresionType);                                         ///nejak si s tim porad, budouci ja
     if(err != 0){
         throwError(err,__LINE__);
         return err;
     }
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType!= SEMICOLON){
         throwError(SYNTAX_ERROR,__LINE__);
         return SYNTAX_ERROR;
@@ -958,7 +1052,7 @@ int LLrule_print(){
  * 10. <param-list> -> IDENTIFIER KEY_AS <data-type> <param>
  */
 int param_list(tFunctionParams * paramStack){
-    nextToken = getToken();
+    nextToken = getNextToken();
 
     if(nextToken->tokenType == IDENTIFIER) {
 
@@ -966,7 +1060,7 @@ int param_list(tFunctionParams * paramStack){
         // param->name = nextToken->data;
         char *paramName;
         strcpy(paramName,nextToken->data);
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != KEY_AS) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -1003,12 +1097,12 @@ int param_list(tFunctionParams * paramStack){
  * 11. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
  */
 int param(tFunctionParams * paramStack){
-    nextToken = getToken();
+    nextToken = getNextToken();
     if(nextToken->tokenType == CLOSING_BRACKET){    //11. <param> -> CLOSING_BRACKET
         return 0;
     }
     if(nextToken->tokenType == COMMA) {               //11. <param> -> COMMA IDENTIFIER KEY_AS <data-type> <param>
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != IDENTIFIER) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -1018,7 +1112,7 @@ int param(tFunctionParams * paramStack){
         char *paramName;
         strcpy(paramName,nextToken->data);
 
-        nextToken = getToken();
+        nextToken = getNextToken();
         if (nextToken->tokenType != KEY_AS) {
             throwError(SYNTAX_ERROR, __LINE__);
             return SYNTAX_ERROR;
@@ -1048,7 +1142,7 @@ int param(tFunctionParams * paramStack){
  *  39. <param-id-list> -> <expression> <param-id>
  */
 int param_id_list(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType == CLOSING_BRACKET){
         return 0;
     }
@@ -1058,7 +1152,8 @@ int param_id_list(){
     }
      */
 
-    int err = expression();///////////////////////////////////////////////////////////////////////Pozor!!! Nacteny Token
+    tokenTypes expresionType;
+    int err = expression(&expresionType);///////////////////////////////////////////////////////////////////////Pozor!!! Nacteny Token
     if(err != 0) {
         throwError(err, __LINE__);
         return err;
@@ -1072,20 +1167,21 @@ int param_id_list(){
  *  11. <param> -> COMMA <expression> <param-id>
  */
 int param_id(){
-    nextToken=getToken();
+    nextToken= getNextToken();
     if(nextToken->tokenType == CLOSING_BRACKET){
         return 0;
     }
     if(nextToken->tokenType == COMMA){
         /*
-        nextToken=getToken();
+        nextToken=getNextToken();
         if(nextToken->tokenType != IDENTIFIER){
             throwError(SYNTAX_ERROR,__LINE__);
             return SYNTAX_ERROR;
         }
          */
 
-        int err = expression();
+        tokenTypes expresionType;
+        int err = expression(&expresionType);
         if(err != 0) {
             throwError(err, __LINE__);
             return err;
@@ -1103,7 +1199,7 @@ int param_id(){
  * @return return 0 if correct, SYNTAX_ERROR if not
  */
 int data_type(int* type){
-    nextToken = getToken();
+    nextToken = getNextToken();
     if(nextToken->tokenType == KEY_STRING){
         *type = STRING;
         return 0;

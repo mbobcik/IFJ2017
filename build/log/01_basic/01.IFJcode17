@@ -1,0 +1,39 @@
+# 2017-12-06 05:08:50.697041
+# SECTION: 01_basic
+# TEST: 01
+# INFO: single scope without any statements
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# 
+# INTERPRETER STDERR:
+# 2.1-5: syntax error, unexpected kwGROOT, expecting HEADER
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 0
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: 51
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' single scope without any statements
+#   2: SCOPE
+#   3: END SCOPE
+
+########################################
+
+# ---
+

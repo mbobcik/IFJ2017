@@ -1,0 +1,98 @@
+# 2017-12-06 05:08:55.878085
+# SECTION: 05_conditions
+# TEST: 15
+# INFO: Many conditions
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 365 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# OKOKOKOKNOTOKNOTOKOKNOTOKOK
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Many conditions
+#   2: 
+#   3: scope
+#   4: 
+#   5: dim a as integer
+#   6: 
+#   7: if a < 1 then
+#   8:     print !"OK";
+#   9: else
+#  10:     print !"NOTOK";
+#  11: end if
+#  12: 
+#  13: if a <= 0 then
+#  14:     print !"OK";
+#  15: else
+#  16:     print !"NOTOK";
+#  17: end if
+#  18: 
+#  19: if a >= 0 then
+#  20:     print !"OK";
+#  21: else
+#  22:     print !"NOTOK";
+#  23: end if
+#  24: 
+#  25: if a >= 0-1 then
+#  26:     print !"OK";
+#  27: else
+#  28:     print !"NOTOK";
+#  29: end if
+#  30: 
+#  31: if a > 0 then
+#  32:     print !"OK";
+#  33: else
+#  34:     print !"NOTOK";
+#  35: end if
+#  36: 
+#  37: if a <> 0 then
+#  38:     print !"OK";
+#  39: else
+#  40:     print !"NOTOK";
+#  41: end if
+#  42: 
+#  43: if a <> 1 then
+#  44:     print !"OK";
+#  45: else
+#  46:     print !"NOTOK";
+#  47: end if
+#  48: 
+#  49: if a = 1 then
+#  50:     print !"OK";
+#  51: else
+#  52:     print !"NOTOK";
+#  53: end if
+#  54: 
+#  55: if a = 0 then
+#  56:     print !"OK";
+#  57: else
+#  58:     print !"NOTOK";
+#  59: end if
+#  60: 
+#  61: end scope
+
+########################################
+
+# ---
+

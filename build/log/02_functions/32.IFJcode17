@@ -1,0 +1,50 @@
+# 2017-12-06 05:08:54.013491
+# SECTION: 02_functions
+# TEST: 32
+# INFO: Double constant into build-in function
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  103 84
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Double constant into build-in function
+#   2: 
+#   3: scope
+#   4:     dim a as double = 3.0
+#   5:     
+#   6:     dim i as integer
+#   7:     dim j as integer
+#   8:     i = asc(!"gzgfggffg", a)
+#   9:     j = asc(!"ERTZUG", 3.0)
+#  10: 
+#  11:     print i; j;
+#  12:     
+#  13: end scope
+
+########################################
+
+# ---
+

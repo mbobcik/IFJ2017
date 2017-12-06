@@ -1,0 +1,57 @@
+# 2017-12-06 05:08:53.485034
+# SECTION: 02_functions
+# TEST: 12
+# INFO: Recursive function
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  42
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Recursive function
+#   2: 
+#   3: function recursive(param as integer) as integer
+#   4: 	dim param0 as integer = 12
+#   5: 	dim res as integer = 10
+#   6: 	param0 = param - 1
+#   7: 	if param = 0 then
+#   8: 		return 42
+#   9: 	else
+#  10: 	    res = recursive(param0)
+#  11: 		return res
+#  12: 	end if
+#  13: end function
+#  14: 
+#  15: scope
+#  16: 	dim a as integer = 12
+#  17: 	a = recursive(4)
+#  18: 	print a;
+#  19: 
+#  20: end scope 
+
+########################################
+
+# ---
+

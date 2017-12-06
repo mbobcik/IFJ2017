@@ -1,0 +1,54 @@
+# 2017-12-06 05:08:54.483476
+# SECTION: 03_statements
+# TEST: 05
+# INFO: input statement
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# 
+# INTERPRETER STDERR:
+# 2.1-5: syntax error, unexpected kwGROOT, expecting HEADER
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# ? ? ? ? 
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+#   42
+# "foo bar"   
+# 78.6
+# 77E6
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 0
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: 51
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' input statement
+#   2: scope
+#   3: 	dim a as integer
+#   4: 	input a
+#   5: 
+#   6: 	dim b as string
+#   7: 	input b
+#   8: 
+#   9: 	dim c as double
+#  10: 	input c
+#  11: 	' exponent
+#  12: 	input c
+#  13: end scope
+
+########################################
+
+# ---
+

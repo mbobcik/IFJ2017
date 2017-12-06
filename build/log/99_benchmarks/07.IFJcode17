@@ -1,0 +1,65 @@
+# 2017-12-06 05:09:05.840870
+# SECTION: 99_benchmarks
+# TEST: 07
+# INFO: reference program working with strings and builtin functions
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# Toto je nejaky text
+# Toto je nejaky text, ktery jeste trochu obohatime
+# 4 znaky od  16. znaku v "Toto je nejaky text, ktery jeste trochu obohatime":text
+# Zadejte serazenou posloupnost vsech malych pismen a-h, pricemz se pismena nesmeji v posloupnosti opakovat? ?
+# Spatne zadana posloupnost, zkuste znovu? !
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# abcdefg
+# abcdefgh
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' reference program working with strings and builtin functions
+#   2: Scope
+#   3: 	'Hlavni telo programu
+#   4: 	dim s1 As String
+#   5: 	dim s2 As String
+#   6: 	dim s1len As Integer
+#   7: 	s1 = !"Toto je nejaky text"
+#   8: 	s2 = s1 + !", ktery jeste trochu obohatime"
+#   9: 	Print s1; !"\n"; s2; !"\n";
+#  10: 	s1len = Length(s1)
+#  11: 	s1len = s1len - 4 + 1
+#  12: 	s1 = SubStr(s2, s1len, 4)
+#  13: 	Print !"4 znaky od "; s1len; !". znaku v \""; s2; !"\":"; s1; !"\n";
+#  14: 	Print !"Zadejte serazenou posloupnost vsech malych pismen a-h, ";
+#  15: 	Print !"pricemz se pismena nesmeji v posloupnosti opakovat";
+#  16: 	Input s1
+#  17: 	print !"?";
+#  18: 	Do While (s1 <> !"abcdefgh")
+#  19: 		Print !"\nSpatne zadana posloupnost, zkuste znovu";
+#  20: 		Input s1
+#  21: 		print !"!";
+#  22: 	Loop
+#  23: End Scope
+
+########################################
+
+# ---
+

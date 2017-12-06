@@ -1,0 +1,66 @@
+# 2017-12-06 05:08:56.252952
+# SECTION: 07_strings
+# TEST: 03
+# INFO: substr builtin function
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# hainguyen
+# son hai nguyen
+# END
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' substr builtin function
+#   2: scope
+#   3: 	dim res as string
+#   4: 	dim tmp as integer
+#   5: 	tmp = 0 - 1
+#   6: 
+#   7: 	res = substr(!"son hai nguyen", 5, 3)
+#   8: 	print res;
+#   9: 
+#  10: 	res = substr(!"son hai nguyen", 9, 120)
+#  11: 	print res;
+#  12: 
+#  13: 	res = substr(!"", 1, 1)
+#  14: 	print res;
+#  15: 
+#  16: 	res = substr(!"nothing", 0, 1)
+#  17: 	print res;
+#  18: 
+#  19: 	res = substr(!"nothing", tmp, 1)
+#  20: 	print res;
+#  21: 
+#  22: 	res = substr(!"\nson hai nguyen", 1, tmp)
+#  23: 	print res;
+#  24: 
+#  25: 	print !"\nEND";
+#  26: 	
+#  27: end scope
+
+########################################
+
+# ---
+

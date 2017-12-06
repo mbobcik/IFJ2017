@@ -1,0 +1,44 @@
+# 2017-12-06 05:08:50.800922
+# SECTION: 01_basic
+# TEST: 06
+# INFO: block comments
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 726 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' block comments
+#   2: scope
+#   3: 	/' this is comment '/
+#   4: 	dim b as string '
+#   5: 	dim a as string ' testing comment
+#   6: 	' whaat
+#   7: 	/' test ' '/
+#   8: end scope
+
+########################################
+
+# ---
+

@@ -1,0 +1,40 @@
+# 2017-12-06 05:09:02.060907
+# SECTION: 66_errors
+# TEST: 122
+# INFO: lexical error
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: SUCCESS
+# 
+# COMPILER STDERR:
+# Error number 1 on line 283 - chyba v programu v rÃ¡mci lexikÃ¡lnÃ­ analÃ½zy (chybnÃ¡ struktura aktuÃ¡lnÃ­ho lexÃ©-
+# mu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 1
+# CURRENT COMPILER EXIT CODE: 1
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: scope 
+#   2:  print 𝖄; 
+#   3:  end scope
+
+########################################
+
+# ---
+

@@ -1,0 +1,38 @@
+# 2017-12-06 05:09:01.760158
+# SECTION: 66_errors
+# TEST: 095
+# INFO: Lexical error in assignment
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: SUCCESS
+# 
+# COMPILER STDERR:
+# Error number 1 on line 106 - chyba v programu v rÃ¡mci lexikÃ¡lnÃ­ analÃ½zy (chybnÃ¡ struktura aktuÃ¡lnÃ­ho lexÃ©-
+# mu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 1
+# CURRENT COMPILER EXIT CODE: 1
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: 3e+
+
+########################################
+
+# ---
+

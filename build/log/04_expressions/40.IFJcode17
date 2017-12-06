@@ -1,0 +1,46 @@
+# 2017-12-06 05:08:55.420132
+# SECTION: 04_expressions
+# TEST: 40
+# INFO: Double implicit conversion
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  3
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Double implicit conversion
+#   2: scope
+#   3: 	Dim x as double = 15.3
+#   4: 	DIM y as double = 3.6
+#   5: 	DIM z as double
+#   6: 	z = x \ y
+#   7: 	print z;
+#   8: 
+#   9: end scope
+
+########################################
+
+# ---
+

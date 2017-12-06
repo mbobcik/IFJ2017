@@ -1,0 +1,46 @@
+# 2017-12-06 05:08:50.726252
+# SECTION: 01_basic
+# TEST: 03
+# INFO: variable definitions
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' variable definitions
+#   2: scope
+#   3:     Dim a as     string = !"foo"
+#   4: 	Dim   b as integer = 4500
+#   5: 	Dim b0_ as integer =   0045
+#   6: 	Dim c   as double = 78.4
+#   7: 	Dim d as double = 78e4
+#   8: 	Dim   e as double =     8e-4
+#   9:     Dim f   as double   = 87E4
+#  10: end scope
+
+########################################
+
+# ---
+

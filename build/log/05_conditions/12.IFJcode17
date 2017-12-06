@@ -1,0 +1,71 @@
+# 2017-12-06 05:08:55.821351
+# SECTION: 05_conditions
+# TEST: 12
+# INFO: string compare
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 365 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  1 1 1 1
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' string compare
+#   2: scope
+#   3: 	dim str1 as string
+#   4: 	dim str2 as string
+#   5: 
+#   6: 	if str1 > str2 then
+#   7: 		print 0;
+#   8: 	else
+#   9: 		print 1;
+#  10: 	end if
+#  11: 
+#  12: 	if str1 >= str2 then
+#  13: 		print 1;
+#  14: 	else
+#  15: 		print 0;
+#  16: 	end if
+#  17: 
+#  18: 	str1 = !"a"
+#  19: 	str2 = !"b"
+#  20: 	if str1 < str2 then
+#  21: 		print 1;
+#  22: 	else
+#  23: 		print 0;
+#  24: 	end if
+#  25: 
+#  26: 	str1 = !"aa"
+#  27: 	str2 = !"aac"
+#  28: 	if str2 > str1 then
+#  29: 		print 1;
+#  30: 	else
+#  31: 		print 0;
+#  32: 	end if
+#  33: 
+#  34: end scope
+
+########################################
+
+# ---
+

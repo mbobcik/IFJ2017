@@ -1,0 +1,55 @@
+# 2017-12-06 05:09:05.860936
+# SECTION: 99_benchmarks
+# TEST: 08
+# INFO: factorial by iteration method
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 45 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# Zadejte cislo pro vypocet faktorialu?  3628800
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 10
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' factorial by iteration method
+#   2: 
+#   3: scope 'Hlavni telo programu
+#   4: Dim a As Integer
+#   5: DIM vysl AS INTEGER
+#   6: PrinT !"Zadejte cislo pro vypocet faktorialu";
+#   7: InpuT A
+#   8: If a < 0 THEN
+#   9: print !"\nFaktorial nelze spocitat\n";
+#  10: ELSE
+#  11: Vysl = 1
+#  12: Do WHile A > 0
+#  13: VYSL = vysl * a
+#  14: a = A - 1
+#  15: LooP
+#  16: Print vYsl;
+#  17: end IF
+#  18: END SCOPE
+
+########################################
+
+# ---
+

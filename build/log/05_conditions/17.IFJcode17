@@ -1,0 +1,94 @@
+# 2017-12-06 05:08:55.921429
+# SECTION: 05_conditions
+# TEST: 17
+# INFO: String relations
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# OKNOTOKOKOKNOTOKOKOKNOTOK
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' String relations
+#   2: 
+#   3: scope
+#   4: 
+#   5: dim a as string
+#   6: a = !"ahoj"
+#   7: 
+#   8: if a < !"bhoj" then
+#   9:     print !"OK";
+#  10: else
+#  11:     print !"NOTOK";
+#  12: end if
+#  13: 
+#  14: if a <> !"ahoj" then
+#  15:     print !"OK";
+#  16: else
+#  17:     print !"NOTOK";
+#  18: end if
+#  19: 
+#  20: if a <> !"bhoj" then
+#  21:     print !"OK";
+#  22: else
+#  23:     print !"NOTOK";
+#  24: end if
+#  25: 
+#  26: if a >= !"ahoj" then
+#  27:     print !"OK";
+#  28: else
+#  29:     print !"NOTOK";
+#  30: end if
+#  31: 
+#  32: if a >= !"hoj" then
+#  33:     print !"OK";
+#  34: else
+#  35:     print !"NOTOK";
+#  36: end if
+#  37: 
+#  38: if a <= !"ahoj" then
+#  39:     print !"OK";
+#  40: else
+#  41:     print !"NOTOK";
+#  42: end if
+#  43: 
+#  44: if a = !"ahoj" then
+#  45:     print !"OK";
+#  46: else
+#  47:     print !"NOTOK";
+#  48: end if
+#  49: 
+#  50: if a = !"bhoj" then
+#  51:     print !"OK";
+#  52: else
+#  53:     print !"NOTOK";
+#  54: end if
+#  55: 
+#  56: 
+#  57: end scope
+
+########################################
+
+# ---
+

@@ -1,0 +1,41 @@
+# 2017-12-06 05:09:01.114753
+# SECTION: 66_errors
+# TEST: 055
+# INFO: No then after if
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: SUCCESS
+# 
+# COMPILER STDERR:
+# Error number 2 on line 365 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 2
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: scope 
+#   2:  dim a as integer 
+#   3:  if a > 10 
+#   4:  end if 
+#   5:  end scope 
+
+########################################
+
+# ---
+

@@ -1,0 +1,6 @@
+' simple adding
+scope
+	dim a as double = 42 + 96 + 1.0
+	a = 10
+	print a;
+end scope

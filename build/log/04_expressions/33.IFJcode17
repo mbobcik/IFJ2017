@@ -1,0 +1,44 @@
+# 2017-12-06 05:08:55.276449
+# SECTION: 04_expressions
+# TEST: 33
+# INFO: Random math expression with -
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 755 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# -19.2
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Random math expression with -
+#   2: 
+#   3: scope
+#   4:     dim a as double
+#   5:     print ((0-4576.5656*4)*676/5/65.67\6.68*(0-58.56678))/(0-5);
+#   6: 
+#   7: end scope
+
+########################################
+
+# ---
+

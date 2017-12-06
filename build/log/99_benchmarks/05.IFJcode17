@@ -1,0 +1,58 @@
+# 2017-12-06 05:09:05.822707
+# SECTION: 99_benchmarks
+# TEST: 05
+# INFO: factorial by recursion
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 495 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  3628800
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' factorial by recursion
+#   2: declare function factorial (n As integer) As integer
+#   3: function factorial (n As integer) As integer
+#   4: 	dim temp_result As integer
+#   5: 	dim decremented_n As integer
+#   6: 	dim result As integer
+#   7: 	if n < 2 Then
+#   8: 		result = 1
+#   9: 	Else
+#  10: 		decremented_n = n - 1
+#  11: 		temp_result = factorial(decremented_n)
+#  12: 		result = n * temp_result
+#  13: 	end if
+#  14: 	Return result
+#  15: end function
+#  16: 
+#  17: scope
+#  18: 	dim res as integer
+#  19: 	res = factorial(10)
+#  20: 	print res;
+#  21: end scope
+
+########################################
+
+# ---
+

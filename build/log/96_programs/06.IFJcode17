@@ -1,0 +1,50 @@
+# 2017-12-06 05:09:05.366935
+# SECTION: 96_programs
+# TEST: 06
+# INFO: Program to Count Number of Digits in an Integer
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 407 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# ?  7
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 1456534
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' Program to Count Number of Digits in an Integer
+#   2: scope
+#   3:     dim a as integer
+#   4:     input a
+#   5:     
+#   6:     dim soucet as integer
+#   7:     do while a <> 0
+#   8:         a = a \ 10
+#   9:         soucet = soucet + 1
+#  10:     loop
+#  11:     
+#  12:     print soucet;
+#  13: end scope
+
+########################################
+
+# ---
+

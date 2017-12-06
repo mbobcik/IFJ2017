@@ -1,0 +1,46 @@
+# 2017-12-06 05:08:50.759550
+# SECTION: 01_basic
+# TEST: 04
+# INFO: variable declarations with edge cases
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# 
+# INTERPRETER STDERR:
+# 2.1-5: syntax error, unexpected kwGROOT, expecting HEADER
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 0
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: 51
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' variable declarations with edge cases
+#   2: scope
+#   3: 	Dim _a45 as string
+#   4: 	Dim __b as integer
+#   5: 	Dim _ as double
+#   6: 	Dim __ as double
+#   7: 	Dim _47 as double
+#   8: 	Dim _47_ as double
+#   9: 	Dim _barman as double
+#  10: end scope
+
+########################################
+
+# ---
+

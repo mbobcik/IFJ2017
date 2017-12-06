@@ -1,0 +1,50 @@
+# 2017-12-06 05:08:54.409180
+# SECTION: 03_statements
+# TEST: 01
+# INFO: basic constant assigment
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+# fooman 42 74.85
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' basic constant assigment
+#   2: scope
+#   3: 	dim a as string
+#   4: 	a =    !"fooman"
+#   5: 
+#   6: 	dim b as integer
+#   7: 	b =  42
+#   8: 
+#   9: 	dim c as double
+#  10: 	c  =  74.85
+#  11: 
+#  12: 	print a; b; c;
+#  13: end scope
+
+########################################
+
+# ---
+

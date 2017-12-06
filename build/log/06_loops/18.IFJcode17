@@ -1,0 +1,57 @@
+# 2017-12-06 05:08:56.073175
+# SECTION: 06_loops
+# TEST: 18
+# INFO: loop from one to 1250
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  1249
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' loop from one to 1250
+#   2: SCOPE
+#   3: 
+#   4: 	dim iterace as integer
+#   5: 	iterace = 1
+#   6: 
+#   7: 	dim expx as integer
+#   8: 
+#   9: 	do while iterace < 1250
+#  10: 
+#  11: 		expx = expx + 1
+#  12: 
+#  13: 		iterace = iterace + 1
+#  14: 
+#  15: 	loop
+#  16: 
+#  17: 	print expx;
+#  18: 
+#  19: 
+#  20: END SCOPE
+
+########################################
+
+# ---
+

@@ -1,0 +1,61 @@
+# 2017-12-06 05:08:56.266405
+# SECTION: 07_strings
+# TEST: 04
+# INFO: asc builtin function
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 327 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  0 116 1 255 127 10 0 0
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' asc builtin function
+#   2: scope
+#   3: 	dim res as integer
+#   4: 	dim tmp as integer
+#   5: 	tmp = 0 - 10
+#   6: 
+#   7: 	res = asc(!"test", 0)
+#   8: 	print res;
+#   9: 	res = asc(!"test", 1)
+#  10: 	print res;
+#  11: 	res = asc(!"\001", 1)
+#  12: 	print res;
+#  13: 	res = asc(!"\255", 1)
+#  14: 	print res;
+#  15: 	res = asc(!"\127", 1)
+#  16: 	print res;
+#  17: 	res = asc(!"\n", 1)
+#  18: 	print res;
+#  19: 	res = asc(!"asdasd", tmp)
+#  20: 	print res;
+#  21: 	res = asc(!"asdasd", 42)
+#  22: 	print res;
+#  23: 	
+#  24: end scope
+
+########################################
+
+# ---
+

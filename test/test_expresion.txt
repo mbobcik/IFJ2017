@@ -1,6 +1,7 @@
 scope
 
-    print 123+32+"aasfsdf";
+
+    print itntostr(123)+32+!"aasfsdf";
 
 
 ends scope

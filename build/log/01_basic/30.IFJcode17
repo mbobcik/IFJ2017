@@ -1,0 +1,52 @@
+# 2017-12-06 05:08:52.287631
+# SECTION: 01_basic
+# TEST: 30
+# INFO: All formats of double
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+#  12496.1
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 0
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: 'All formats of double
+#   2: scope
+#   3:     dim a as double = 11.43
+#   4:     dim b as double = 31e2
+#   5:     dim c as double = 31e-3
+#   6:     dim d as double = 31.42e2
+#   7:     dim e as double = 31.42e-2
+#   8:     dim f as double = 31E2
+#   9:     dim g as double = 341E-4
+#  10:     dim h as double = 31.42E2
+#  11:     dim i as double = 31.42E-2
+#  12:     
+#  13:     print a + b + c + d + e + f+ g + h + i;
+#  14:     
+#  15: end scope
+
+########################################
+
+# ---
+

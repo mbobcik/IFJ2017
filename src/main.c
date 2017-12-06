@@ -2,24 +2,16 @@
 // Created by Martin Bobčík on 10/23/17.
 //
 
-
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <stdbool.h>
-
-#include "error.h"
-#include "parser.h"
 #include "functions.h"
 
 
 
 int main(int argc, char **argv) {
 
-//    token * token = getToken();
+//    token * token = getNextToken();
 //    printToken(token);
 //    while (token->tokenType != END_OF_FILE) {
-//        token = getToken();
+//        token = getNextToken();
 //        printToken(token);
 //    }
 

@@ -1,0 +1,44 @@
+# 2017-12-06 05:08:53.999249
+# SECTION: 02_functions
+# TEST: 31
+# INFO: missmatch in return data type
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: FAIL
+# 
+# COMPILER STDERR:
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 3
+# CURRENT COMPILER EXIT CODE: -11
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' missmatch in return data type
+#   2: 
+#   3: declare function foo() as integer
+#   4: 
+#   5: function foo() as string 
+#   6: end function
+#   7: 
+#   8: scope
+#   9: end scope
+
+########################################
+
+# ---
+

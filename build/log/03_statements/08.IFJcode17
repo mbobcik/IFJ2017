@@ -1,0 +1,47 @@
+# 2017-12-06 05:08:54.528759
+# SECTION: 03_statements
+# TEST: 08
+# INFO: multiple main scopes
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: SUCCESS
+# 
+# COMPILER STDERR:
+# Error number 2 on line 234 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 2
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: ' multiple main scopes
+#   2: 
+#   3: scope
+#   4: 
+#   5: end scope
+#   6: 
+#   7: 
+#   8: scope
+#   9: 
+#  10: end scope
+#  11: 
+
+########################################
+
+# ---
+

@@ -1,0 +1,42 @@
+# 2017-12-06 05:09:04.997859
+# SECTION: 66_errors
+# TEST: 300
+# INFO: invalid types to compare
+# REQUIRED EXTENSIONS: 
+# ACTIVATED EXTENSIONS: 
+# STATE: SUCCESS
+# 
+# COMPILER STDERR:
+# Error number 2 on line 737 - chyba v programu v rÃ¡mci syntaktickÃ© analÃ½zy (chybnÃ¡ syntaxe programu).
+# 
+# INTERPRETER STDERR:
+# 
+# EXPECTED INTERPRETER STDOUT:
+
+
+
+# CURRENT INTERPRETER STDOUT:
+
+
+
+# INTERPRETER STDIN: 
+# 
+#
+# EXPECTED COMPILER EXIT CODE: 2
+# CURRENT COMPILER EXIT CODE: 2
+# EXPECTED INTERPRETER EXIT CODE: 0
+# CURRENT INTERPRETER EXIT CODE: None
+# PRICE: ---
+# GROOT: ---
+# 
+#   1: scope 
+#   2:  dim a as integer = 10 
+#   3:  if 1 < a < 20 then 
+#   4:  else 
+#   5:  end if 
+#   6:  end scope
+
+########################################
+
+# ---
+
