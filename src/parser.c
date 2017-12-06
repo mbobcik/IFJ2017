@@ -84,7 +84,7 @@ int parse() {
     }
 
     if (DEBUG){
-        show_ht_table(&globalSymTable, false);
+        //show_ht_table(&globalSymTable, false);
     }
     return 0;
 }
@@ -415,7 +415,7 @@ int scope_st_list(){
             throwError(INTERNAL_ERROR,__LINE__);
         }
 
-        tokenTypes typeOfExpresion;
+        tokenTypes typeOfExpresion = variableDataType;
         err = assign(&typeOfExpresion);
         if(err != 0){
             throwError(err,__LINE__);
